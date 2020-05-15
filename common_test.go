@@ -1,4 +1,4 @@
-package database
+package lightweight_db
 
 import (
 	"database/sql"
