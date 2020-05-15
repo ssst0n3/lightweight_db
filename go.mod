@@ -1,4 +1,4 @@
-module lightweight_db
+module github.com/ssst0n3/lightweight_db
 
 go 1.14
 
