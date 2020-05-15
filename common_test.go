@@ -79,7 +79,7 @@ func TestConnector_DeleteObjectById(t *testing.T) {
 	}
 	type args struct {
 		tableName string
-		id        uint
+		id        uint64
 	}
 	tests := []struct {
 		name    string
@@ -149,7 +149,7 @@ func TestConnector_IsObjectIdExists(t *testing.T) {
 	}
 	type args struct {
 		tableName string
-		id        uint
+		id        uint64
 	}
 	tests := []struct {
 		name   string
@@ -261,7 +261,7 @@ func TestConnector_IsResourceNameExistsExceptSelf(t *testing.T) {
 		tableName   string
 		guidColName string
 		guidValue   string
-		id          uint
+		id          uint64
 	}
 	tests := []struct {
 		name   string
@@ -406,7 +406,7 @@ func TestConnector_ShowObjectById(t *testing.T) {
 	}
 	type args struct {
 		tableName string
-		id        uint
+		id        uint64
 	}
 	tests := []struct {
 		name    string
@@ -445,7 +445,7 @@ func TestConnector_ShowObjectOnePropertyById(t *testing.T) {
 	type args struct {
 		tableName  string
 		columnName string
-		id         uint
+		id         uint64
 	}
 	tests := []struct {
 		name    string
@@ -482,7 +482,7 @@ func TestConnector_UpdateObject(t *testing.T) {
 		db         *sql.DB
 	}
 	type args struct {
-		id        uint
+		id        uint64
 		tableName string
 		model     interface{}
 	}
@@ -515,7 +515,7 @@ func TestConnector_UpdateObjectSingleColumnById(t *testing.T) {
 		db         *sql.DB
 	}
 	type args struct {
-		id         uint
+		id         uint64
 		tableName  string
 		columnName string
 		value      interface{}
