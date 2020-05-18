@@ -24,7 +24,7 @@ func TestConnector_Close(t *testing.T) {
 			c := &Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			if err := c.Close(); (err != nil) != tt.wantErr {
 				t.Errorf("Close() error = %v, wantErr %v", err, tt.wantErr)
@@ -57,7 +57,7 @@ func TestConnector_CreateObject(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.CreateObject(tt.args.tableName, tt.args.model)
 			if (err != nil) != tt.wantErr {
@@ -94,7 +94,7 @@ func TestConnector_DeleteObjectById(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			if err := c.DeleteObjectById(tt.args.tableName, tt.args.id); (err != nil) != tt.wantErr {
 				t.Errorf("DeleteObjectById() error = %v, wantErr %v", err, tt.wantErr)
@@ -127,7 +127,7 @@ func TestConnector_Exec(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.Exec(tt.args.query, tt.args.args...)
 			if (err != nil) != tt.wantErr {
@@ -164,7 +164,7 @@ func TestConnector_IsObjectIdExists(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			if got := c.IsObjectIdExists(tt.args.tableName, tt.args.id); got != tt.want {
 				t.Errorf("IsObjectIdExists() = %v, want %v", got, tt.want)
@@ -198,7 +198,7 @@ func TestConnector_IsResourceExists(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.IsResourceExists(tt.args.tableName, tt.args.colName, tt.args.content)
 			if (err != nil) != tt.wantErr {
@@ -237,7 +237,7 @@ func TestConnector_IsResourceNameExists(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.IsResourceNameExists(tt.args.tableName, tt.args.guidColName, tt.args.guidValue)
 			if (err != nil) != tt.wantErr {
@@ -276,7 +276,7 @@ func TestConnector_IsResourceNameExistsExceptSelf(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			if got := c.IsResourceNameExistsExceptSelf(tt.args.tableName, tt.args.guidColName, tt.args.guidValue, tt.args.id); got != tt.want {
 				t.Errorf("IsResourceNameExistsExceptSelf() = %v, want %v", got, tt.want)
@@ -308,7 +308,7 @@ func TestConnector_ListAllPropertiesByTableName(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.ListAllPropertiesByTableName(tt.args.tableName)
 			if (err != nil) != tt.wantErr {
@@ -346,7 +346,7 @@ func TestConnector_ListObjects(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.ListObjects(tt.args.query, tt.args.args...)
 			if (err != nil) != tt.wantErr {
@@ -384,7 +384,7 @@ func TestConnector_Query(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.Query(tt.args.query, tt.args.args...)
 			if (err != nil) != tt.wantErr {
@@ -422,7 +422,7 @@ func TestConnector_ShowObjectById(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.ShowObjectById(tt.args.tableName, tt.args.id)
 			if (err != nil) != tt.wantErr {
@@ -461,7 +461,7 @@ func TestConnector_ShowObjectOnePropertyById(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			got, err := c.ShowObjectOnePropertyById(tt.args.tableName, tt.args.columnName, tt.args.id)
 			if (err != nil) != tt.wantErr {
@@ -499,7 +499,7 @@ func TestConnector_UpdateObject(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			if err := c.UpdateObject(tt.args.id, tt.args.tableName, tt.args.model); (err != nil) != tt.wantErr {
 				t.Errorf("UpdateObject() error = %v, wantErr %v", err, tt.wantErr)
@@ -533,7 +533,7 @@ func TestConnector_UpdateObjectSingleColumnById(t *testing.T) {
 			c := Connector{
 				DriverName: tt.fields.DriverName,
 				Dsn:        tt.fields.Dsn,
-				db:         tt.fields.db,
+				DB:         tt.fields.db,
 			}
 			if err := c.UpdateObjectSingleColumnById(tt.args.id, tt.args.tableName, tt.args.columnName, tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("UpdateObjectSingleColumnById() error = %v, wantErr %v", err, tt.wantErr)

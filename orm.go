@@ -12,7 +12,7 @@ func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interfa
 	}
 	logrus.Debugf("query: %s", query)
 	logrus.Debugf("args: %v", args)
-	if err := c.db.QueryRow(query, args...).Scan(resultPtr); err != nil {
+	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil {
 		CheckErr(err)
 		return err
 	}

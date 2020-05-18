@@ -12,13 +12,13 @@ import (
 type Connector struct {
 	DriverName string
 	Dsn        string
-	db         *sql.DB
+	DB         *sql.DB
 }
 
 func (c Connector) Exec(query string, args ...interface{}) (sql.Result, error) {
 	logrus.Debugf("query: %s", query)
 	logrus.Debugf("args: %v", args)
-	result, err := c.db.Exec(query, args...)
+	result, err := c.DB.Exec(query, args...)
 	if err != nil {
 		CheckErr(err)
 		return result, err
@@ -31,7 +31,7 @@ func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	logrus.Debugf("args: %v", args)
 	// TODO: add to blog
 	// prepare, otherwise the type is string
-	stmt, err := c.db.Prepare(query)
+	stmt, err := c.DB.Prepare(query)
 	if err != nil {
 		CheckErr(err)
 		return nil, err
@@ -128,7 +128,7 @@ func (c Connector) ListAllPropertiesByTableName(tableName string) ([]map[string]
 func (c Connector) IsObjectIdExists(tableName string, id uint64) bool {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE id=?", tableName)
-	if err := c.db.QueryRow(query, id).Scan(&result); err != nil {
+	if err := c.DB.QueryRow(query, id).Scan(&result); err != nil {
 		CheckErr(err)
 		return false
 	}
@@ -168,7 +168,7 @@ func (c Connector) IsResourceExists(tableName string, colName string, content st
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=?", tableName, colName)
 	logrus.Debugf("query:%s; args:%v", query, content)
-	if err := c.db.QueryRow(query, content).Scan(&result); err != nil {
+	if err := c.DB.QueryRow(query, content).Scan(&result); err != nil {
 		CheckErr(err)
 		return false, err
 	}
@@ -196,7 +196,7 @@ func (c Connector) IsResourceNameExists(tableName string, guidColName, guidValue
 func (c Connector) IsResourceNameExistsExceptSelf(tableName string, guidColName string, guidValue string, id uint64) bool {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=? AND id != ?", tableName, guidColName)
-	if err := c.db.QueryRow(query, guidValue, id).Scan(&result); err != nil {
+	if err := c.DB.QueryRow(query, guidValue, id).Scan(&result); err != nil {
 		CheckErr(err)
 		return false
 	}
@@ -263,5 +263,5 @@ func (c Connector) UpdateObjectSingleColumnById(id uint64, tableName string, col
 }
 
 func (c *Connector) Close() error {
-	return c.db.Close()
+	return c.DB.Close()
 }

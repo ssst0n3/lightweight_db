@@ -14,10 +14,10 @@ func (c *Connector) Init() {
 }
 
 func (c *Connector) Connect() (err error) {
-	c.db, err = sql.Open(c.DriverName, c.Dsn)
+	c.DB, err = sql.Open(c.DriverName, c.Dsn)
 	if err != nil {
 		CheckErr(err)
 		return err
 	}
-	return c.db.Ping()
+	return c.DB.Ping()
 }
