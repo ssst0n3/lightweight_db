@@ -17,14 +17,24 @@ func TestFieldByJsonTag(t *testing.T) {
 		want  reflect.Value
 		want1 bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "struct",
+			args: args{
+				v:       Reflect(struct {
+					Name string `json:"name"`
+				}{
+					Name: "john",
+				}),
+				jsonTag: "name",
+			},
+			want:  Reflect("john"),
+			want1: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := FieldByJsonTag(tt.args.v, tt.args.jsonTag)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FieldByJsonTag() got = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want.Interface(), got.Interface())
 			if got1 != tt.want1 {
 				t.Errorf("FieldByJsonTag() got1 = %v, want %v", got1, tt.want1)
 			}
