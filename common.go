@@ -124,7 +124,7 @@ func (c Connector) ListAllPropertiesByTableName(tableName string) ([]map[string]
 	return objects, err
 }
 
-func (c Connector) DeleteObjectById(tableName string, id uint64) error {
+func (c Connector) DeleteObjectById(tableName string, id int64) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE `id`=?", tableName)
 	_, err := c.Exec(query, id)
 	if err != nil {
@@ -133,7 +133,7 @@ func (c Connector) DeleteObjectById(tableName string, id uint64) error {
 	return error(nil)
 }
 
-func (c Connector) ShowObjectById(tableName string, id uint64) (map[string]interface{}, error) {
+func (c Connector) ShowObjectById(tableName string, id int64) (map[string]interface{}, error) {
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=?", tableName)
 	rows, err := c.Query(query, id)
 	if err != nil {
@@ -145,7 +145,7 @@ func (c Connector) ShowObjectById(tableName string, id uint64) (map[string]inter
 	return object, err
 }
 
-func (c Connector) ShowObjectOnePropertyById(tableName string, columnName string, id uint64) (interface{}, error) {
+func (c Connector) ShowObjectOnePropertyById(tableName string, columnName string, id int64) (interface{}, error) {
 	object, err := c.ShowObjectById(tableName, id)
 	return object[columnName], err
 }
@@ -177,7 +177,7 @@ func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidVal
 	return false, nil
 }
 
-func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColName string, guidValue interface{}, id uint64) bool {
+func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColName string, guidValue interface{}, id int64) bool {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=? AND id != ?", tableName, guidColName)
 	if err := c.DB.QueryRow(query, guidValue, id).Scan(&result); err != nil {
@@ -212,7 +212,7 @@ func (c Connector) CreateObject(tableName string, model interface{}) (int64, err
 	return id, nil
 }
 
-func (c Connector) UpdateObject(id uint64, tableName string, model interface{}) error {
+func (c Connector) UpdateObject(id int64, tableName string, model interface{}) error {
 	var cols []string
 	var args []interface{}
 
@@ -235,7 +235,7 @@ func (c Connector) UpdateObject(id uint64, tableName string, model interface{}) 
 	return nil
 }
 
-func (c Connector) UpdateObjectSingleColumnById(id uint64, tableName string, columnName string, value interface{}) error {
+func (c Connector) UpdateObjectSingleColumnById(id int64, tableName string, columnName string, value interface{}) error {
 	query := fmt.Sprintf("UPDATE %s SET %s=? WHERE id=?", tableName, columnName)
 	args := []interface{}{value, id}
 	_, err := c.Exec(query, args...)
