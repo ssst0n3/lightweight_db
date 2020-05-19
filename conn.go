@@ -2,14 +2,13 @@ package lightweight_db
 
 import (
 	"database/sql"
-	"github.com/sirupsen/logrus"
 )
 
 func (c *Connector) Init() {
-	logrus.Info("entering")
+	Logger.Info("entering")
 	err := c.Connect()
 	if err != nil {
-		logrus.Fatal(err)
+		Logger.Fatal(err)
 	}
 }
 

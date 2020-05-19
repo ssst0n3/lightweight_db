@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/sirupsen/logrus"
 	"log"
 	"strings"
 )
@@ -16,8 +15,8 @@ type Connector struct {
 }
 
 func (c Connector) Exec(query string, args ...interface{}) (sql.Result, error) {
-	logrus.Debugf("query: %s", query)
-	logrus.Debugf("args: %v", args)
+	Logger.Debugf("query: %s", query)
+	Logger.Debugf("args: %v", args)
 	result, err := c.DB.Exec(query, args...)
 	if err != nil {
 		CheckErr(err)
@@ -27,8 +26,8 @@ func (c Connector) Exec(query string, args ...interface{}) (sql.Result, error) {
 }
 
 func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	logrus.Debugf("query: %s", query)
-	logrus.Debugf("args: %v", args)
+	Logger.Debugf("query: %s", query)
+	Logger.Debugf("args: %v", args)
 	// TODO: add to blog
 	// prepare, otherwise the type is string
 	stmt, err := c.DB.Prepare(query)
@@ -83,7 +82,7 @@ func FetchRows(rows *sql.Rows) ([]map[string]interface{}, error) {
 			allNil = allNil && record == nil
 		}
 		if allNil {
-			logrus.Debugf("result: %s", []map[string]interface{}{})
+			Logger.Debugf("result: %s", []map[string]interface{}{})
 			return []map[string]interface{}{}, nil
 		}
 	}
@@ -91,7 +90,7 @@ func FetchRows(rows *sql.Rows) ([]map[string]interface{}, error) {
 	if err := rows.Err(); err != nil {
 		return result, err
 	}
-	logrus.Debugf("result: %+v", result)
+	Logger.Debugf("result: %+v", result)
 	return result, err
 }
 
@@ -164,22 +163,7 @@ func (c Connector) ShowObjectOnePropertyById(tableName string, columnName string
 	return object[columnName], err
 }
 
-func (c Connector) IsResourceExists(tableName string, colName string, content string) (bool, error) {
-	var result int
-	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=?", tableName, colName)
-	logrus.Debugf("query:%s; args:%v", query, content)
-	if err := c.DB.QueryRow(query, content).Scan(&result); err != nil {
-		CheckErr(err)
-		return false, err
-	}
-
-	if result > 0 {
-		return true, nil
-	}
-	return false, nil
-}
-
-func (c Connector) IsResourceNameExists(tableName string, guidColName, guidValue string) (bool, error) {
+func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidValue interface{}) (bool, error) {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=?", tableName, guidColName)
 	if err := c.QueryRow(query, &result, guidValue); err != nil {
@@ -193,7 +177,7 @@ func (c Connector) IsResourceNameExists(tableName string, guidColName, guidValue
 	return false, nil
 }
 
-func (c Connector) IsResourceNameExistsExceptSelf(tableName string, guidColName string, guidValue string, id uint64) bool {
+func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColName string, guidValue interface{}, id uint64) bool {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=? AND id != ?", tableName, guidColName)
 	if err := c.DB.QueryRow(query, guidValue, id).Scan(&result); err != nil {

@@ -3,15 +3,14 @@ package lightweight_db
 import (
 	"fmt"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interface{}) error {
 	if !IsPointer(resultPtr) {
 		return errors.Errorf("the argument must be pointer or reference")
 	}
-	logrus.Debugf("query: %s", query)
-	logrus.Debugf("args: %v", args)
+	Logger.Debugf("query: %s", query)
+	Logger.Debugf("args: %v", args)
 	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil {
 		CheckErr(err)
 		return err
