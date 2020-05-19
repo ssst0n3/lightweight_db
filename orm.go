@@ -65,7 +65,7 @@ func (c Connector) OrmListTableUsingReflect(tableName string, model interface{})
 /*
 !!!reflect attention, may cause panic!!!
 */
-func (c Connector) OrmShowObjectByIdUsingReflect(tableName string, id uint64, modelPtr interface{}) error {
+func (c Connector) OrmShowObjectByIdUsingReflect(tableName string, id int64, modelPtr interface{}) error {
 	if !IsPointer(modelPtr) {
 		return errors.Errorf("the argument must be pointer or reference")
 	}
@@ -90,7 +90,7 @@ func (c Connector) OrmListTableUsingJson(tableName string, modelPtr interface{})
 	return Value2StructByJson(objects, modelPtr)
 }
 
-func (c Connector) OrmShowObjectByIdUsingJson(tableName string, id uint64, modelPtr interface{}) error {
+func (c Connector) OrmShowObjectByIdUsingJson(tableName string, id int64, modelPtr interface{}) error {
 	if !IsPointer(modelPtr) {
 		return errors.Errorf("the argument must be pointer or reference")
 	}
@@ -102,7 +102,7 @@ func (c Connector) OrmShowObjectByIdUsingJson(tableName string, id uint64, model
 	return Value2StructByJson(object, modelPtr)
 }
 
-func (c Connector) OrmShowObjectOnePropertyByIdUsingJson(tableName string, columnName string, id uint64, modelPtr interface{}) error {
+func (c Connector) OrmShowObjectOnePropertyByIdUsingJson(tableName string, columnName string, id int64, modelPtr interface{}) error {
 	if !IsPointer(modelPtr) {
 		return errors.Errorf("the argument must be pointer or reference")
 	}
