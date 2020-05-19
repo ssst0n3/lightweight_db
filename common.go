@@ -124,19 +124,6 @@ func (c Connector) ListAllPropertiesByTableName(tableName string) ([]map[string]
 	return objects, err
 }
 
-func (c Connector) IsObjectIdExists(tableName string, id uint64) bool {
-	var result int
-	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE id=?", tableName)
-	if err := c.DB.QueryRow(query, id).Scan(&result); err != nil {
-		CheckErr(err)
-		return false
-	}
-	if result > 0 {
-		return true
-	}
-	return false
-}
-
 func (c Connector) DeleteObjectById(tableName string, id uint64) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE `id`=?", tableName)
 	_, err := c.Exec(query, id)
@@ -161,6 +148,19 @@ func (c Connector) ShowObjectById(tableName string, id uint64) (map[string]inter
 func (c Connector) ShowObjectOnePropertyById(tableName string, columnName string, id uint64) (interface{}, error) {
 	object, err := c.ShowObjectById(tableName, id)
 	return object[columnName], err
+}
+
+func (c Connector) IsResourceExistsById(tableName string, id int64) bool {
+	var result int
+	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE id=?", tableName)
+	if err := c.DB.QueryRow(query, id).Scan(&result); err != nil {
+		CheckErr(err)
+		return false
+	}
+	if result > 0 {
+		return true
+	}
+	return false
 }
 
 func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidValue interface{}) (bool, error) {
