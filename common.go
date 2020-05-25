@@ -177,18 +177,18 @@ func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidVal
 	return false, nil
 }
 
-func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColName string, guidValue interface{}, id int64) bool {
+func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColName string, guidValue interface{}, id int64) (bool, error) {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=? AND id != ?", tableName, guidColName)
 	if err := c.DB.QueryRow(query, guidValue, id).Scan(&result); err != nil {
 		CheckErr(err)
-		return false
+		return false, err
 	}
 	log.Printf("in function IsResourceNameExists, count: %#v", result)
 	if result > 0 {
-		return true
+		return true, nil
 	}
-	return false
+	return false, nil
 }
 
 /*
