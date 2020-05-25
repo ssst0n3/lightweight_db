@@ -212,18 +212,12 @@ func (c Connector) CreateObject(tableName string, model interface{}) (int64, err
 	return id, nil
 }
 
+/*
+!!!reflect attention, may cause panic!!!
+model can be struct, can also be pointer(reference)
+*/
 func (c Connector) UpdateObject(id int64, tableName string, model interface{}) error {
-	var cols []string
-	var args []interface{}
-
-	val := Reflect(model)
-	// TODO: struct
-	for i := 0; i < val.Type().NumField(); i++ {
-		col := val.Type().Field(i).Tag.Get("json")
-		arg := val.Field(i).Interface()
-		cols = append(cols, col)
-		args = append(args, arg)
-	}
+	cols, args := ReflectRetColsValues(model)
 	// args... variable parameter
 	args = append(args, id)
 	query := fmt.Sprintf("UPDATE %s SET `%s`=? WHERE `id`=?", tableName, strings.Join(cols, "`=?, `"))
