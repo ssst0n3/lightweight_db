@@ -57,10 +57,10 @@ func TestConnector_IsResourceExistsByGuid(t *testing.T) {
 func TestConnector_UpdateObject(t *testing.T) {
 	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges)
 	t.Run("simple struct", func(t *testing.T) {
-		err := Conn.UpdateObject(int64(test_data.Challenge1.Id), test_data.TableNameChallenge, test_data.Challenge{})
+		err := Conn.UpdateObject(int64(test_data.Challenge1.Id), test_data.TableNameChallenge, test_data.Challenge1Update)
 		assert.NoError(t, err)
 	})
 	t.Run("nested struct", func(t *testing.T) {
-		// TODO
+		// TODO: use another model
 	})
 }

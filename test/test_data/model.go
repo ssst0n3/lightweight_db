@@ -52,3 +52,11 @@ var Challenges = func() (resourceWrapper []ResourceWrapper) {
 	}
 	return resourceWrapper
 }()
+
+var Challenge1Update = ChallengeWithId{
+	Id: Challenge1.Id,
+	Challenge: Challenge{
+		Name:  Challenge1.Name,
+		Score: 20,
+	},
+}
