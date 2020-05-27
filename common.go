@@ -141,7 +141,6 @@ func (c Connector) ShowObjectById(tableName string, id int64) (map[string]interf
 		return make(map[string]interface{}), err
 	}
 	object, err := FetchOneRow(rows)
-	spew.Dump(object)
 	return object, err
 }
 
