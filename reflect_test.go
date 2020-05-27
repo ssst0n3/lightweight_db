@@ -20,7 +20,7 @@ func TestFieldByJsonTag(t *testing.T) {
 		{
 			name: "struct",
 			args: args{
-				v:       Reflect(struct {
+				v: Reflect(struct {
 					Name string `json:"name"`
 				}{
 					Name: "john",
@@ -87,20 +87,15 @@ func TestReflectByModel(t *testing.T) {
 		model interface{}
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    reflect.Value
-		wantErr bool
+		name string
+		args args
+		want reflect.Value
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ReflectByModel(tt.args.model)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ReflectByModel() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := ReflectByModel(tt.args.model)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ReflectByModel() got = %v, want %v", got, tt.want)
 			}
@@ -113,20 +108,15 @@ func TestReflectByPtr(t *testing.T) {
 		modelPtr interface{}
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    reflect.Value
-		wantErr bool
+		name string
+		args args
+		want reflect.Value
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ReflectByPtr(tt.args.modelPtr)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ReflectByPtr() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := ReflectByPtr(tt.args.modelPtr)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ReflectByPtr() got = %v, want %v", got, tt.want)
 			}

@@ -2,13 +2,10 @@ package lightweight_db
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 )
 
 func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interface{}) error {
-	if !IsPointer(resultPtr) {
-		return errors.Errorf("the argument must be pointer or reference")
-	}
+	MustIsPointer(resultPtr)
 	Logger.Debugf("query: %s", query)
 	Logger.Debugf("args: %v", args)
 	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil {
@@ -22,9 +19,7 @@ func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interfa
 !!!reflect attention, may cause panic!!!
 */
 func (c Connector) OrmQueryRow(modelPtr interface{}, query string, args ...interface{}) error {
-	if !IsPointer(modelPtr) {
-		return errors.Errorf("the argument must be pointer or reference")
-	}
+	MustIsPointer(modelPtr)
 	rows, err := c.Query(query, args...)
 	object, err := FetchOneRow(rows)
 	if err != nil {
@@ -66,9 +61,7 @@ func (c Connector) OrmListTableUsingReflect(tableName string, model interface{})
 !!!reflect attention, may cause panic!!!
 */
 func (c Connector) OrmShowObjectByIdUsingReflect(tableName string, id int64, modelPtr interface{}) error {
-	if !IsPointer(modelPtr) {
-		return errors.Errorf("the argument must be pointer or reference")
-	}
+	MustIsPointer(modelPtr)
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=?", tableName)
 	return c.OrmQueryRow(modelPtr, query, id)
 }
@@ -79,9 +72,7 @@ var model []model.TableWithId
 c.OrmListTableUsingJson(tableName, &model)
 */
 func (c Connector) OrmListTableUsingJson(tableName string, modelPtr interface{}) error {
-	if !IsPointer(modelPtr) {
-		return errors.Errorf("the argument must be pointer or reference")
-	}
+	MustIsPointer(modelPtr)
 	objects, err := c.ListAllPropertiesByTableName(tableName)
 	if err != nil {
 		CheckErr(err)
@@ -91,9 +82,7 @@ func (c Connector) OrmListTableUsingJson(tableName string, modelPtr interface{})
 }
 
 func (c Connector) OrmShowObjectByIdUsingJson(tableName string, id int64, modelPtr interface{}) error {
-	if !IsPointer(modelPtr) {
-		return errors.Errorf("the argument must be pointer or reference")
-	}
+	MustIsPointer(modelPtr)
 	object, err := c.ShowObjectById(tableName, id)
 	if err != nil {
 		CheckErr(err)
@@ -103,9 +92,7 @@ func (c Connector) OrmShowObjectByIdUsingJson(tableName string, id int64, modelP
 }
 
 func (c Connector) OrmShowObjectOnePropertyByIdUsingJson(tableName string, columnName string, id int64, modelPtr interface{}) error {
-	if !IsPointer(modelPtr) {
-		return errors.Errorf("the argument must be pointer or reference")
-	}
+	MustIsPointer(modelPtr)
 	property, err := c.ShowObjectOnePropertyById(tableName, columnName, id)
 	if err != nil {
 		CheckErr(err)

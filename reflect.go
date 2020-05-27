@@ -13,6 +13,18 @@ func IsPointer(model interface{}) bool {
 	return reflect.ValueOf(model).Kind() == reflect.Ptr
 }
 
+func MustIsPointer(model interface{}) {
+	if !IsPointer(model) {
+		Logger.Fatal(errors.Errorf("the argument must be pointer and reference"))
+	}
+}
+
+func MustNotPointer(model interface{}) {
+	if IsPointer(model) {
+		Logger.Fatal(errors.Errorf("the argument must'nt be pointer and reference"))
+	}
+}
+
 /*
 !!!reflect attention, may cause panic!!!
 */
@@ -28,21 +40,17 @@ func Reflect(model interface{}) reflect.Value {
 /*
 !!!reflect attention, may cause panic!!!
 */
-func ReflectByModel(model interface{}) (reflect.Value, error) {
-	if IsPointer(model) {
-		return reflect.Value{}, errors.Errorf("the argument must'nt be pointer and reference")
-	}
-	return reflect.ValueOf(model), nil
+func ReflectByModel(model interface{}) reflect.Value {
+	MustNotPointer(model)
+	return reflect.ValueOf(model)
 }
 
 /*
 !!!reflect attention, may cause panic!!!
 */
-func ReflectByPtr(modelPtr interface{}) (reflect.Value, error) {
-	if !IsPointer(modelPtr) {
-		return reflect.Value{}, errors.Errorf("the argument must be pointer or reference")
-	}
-	return reflect.ValueOf(modelPtr).Elem(), nil
+func ReflectByPtr(modelPtr interface{}) reflect.Value {
+	MustIsPointer(modelPtr)
+	return reflect.ValueOf(modelPtr).Elem()
 }
 
 /*
@@ -84,11 +92,7 @@ func ReflectRetColsValues(model interface{}) (colsRet []string, valuesRet []inte
 !!!reflect attention, may cause panic!!!
 */
 func ReflectModelPtrFromMap(modelPtr interface{}, object map[string]interface{}) error {
-	val, err := ReflectByPtr(modelPtr)
-	if err != nil {
-		CheckErr(err)
-		return err
-	}
+	val := ReflectByPtr(modelPtr)
 
 	for name, value := range object {
 		field, find := FieldByJsonTag(val, name)
@@ -124,9 +128,7 @@ func FieldByJsonTag(v reflect.Value, jsonTag string) (reflect.Value, bool) {
 !!!reflect attention, may cause panic!!!
 */
 func ReflectModelFromMap(model interface{}, object map[string]interface{}) (interface{}, error) {
-	if IsPointer(model) {
-		return nil, errors.Errorf("the argument must'nt be pointer and reference")
-	}
+	MustNotPointer(model)
 	val := reflect.New(reflect.TypeOf(model)).Elem()
 	for name, value := range object {
 		//field := val.FieldByNameFunc(func(s string) bool {
