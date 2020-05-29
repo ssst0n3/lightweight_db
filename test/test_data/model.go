@@ -14,8 +14,9 @@ type ResourceWrapper struct {
 }
 
 type Challenge struct {
-	Name  string `json:"name"`
-	Score int    `json:"score"`
+	Name   string `json:"name"`
+	Score  int    `json:"score"`
+	Solved bool   `json:"solved"`
 }
 
 type ChallengeWithId struct {
@@ -34,8 +35,9 @@ const (
 var Challenge1 = ChallengeWithId{
 	Id: 1,
 	Challenge: Challenge{
-		Name:  "name",
-		Score: 10,
+		Name:   "name",
+		Score:  10,
+		Solved: true,
 	},
 }
 
@@ -56,7 +58,23 @@ var Challenges = func() (resourceWrapper []ResourceWrapper) {
 var Challenge1Update = ChallengeWithId{
 	Id: Challenge1.Id,
 	Challenge: Challenge{
-		Name:  Challenge1.Name,
-		Score: 20,
+		Name:   Challenge1.Name,
+		Score:  20,
+		Solved: true,
 	},
+}
+
+func Bool2Int64(b bool) int64 {
+	if b {
+		return int64(1)
+	} else {
+		return int64(0)
+	}
+}
+
+var Challenge1FromDbSimulate = map[string]interface{}{
+	"id":     int64(Challenge1.Id),
+	"name":   Challenge1.Name,
+	"score":  int64(Challenge1.Score),
+	"solved": Bool2Int64(Challenge1.Solved),
 }

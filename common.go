@@ -3,7 +3,6 @@ package lightweight_db
 import (
 	"database/sql"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"log"
 	"strings"
 )

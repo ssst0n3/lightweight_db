@@ -1,6 +1,7 @@
 package lightweight_db
 
 import (
+	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
@@ -135,7 +136,15 @@ func TestReflectModelFromMap(t *testing.T) {
 		want    interface{}
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "struct with bool",
+			args: args{
+				model:  test_data.ChallengeWithId{},
+				object: test_data.Challenge1FromDbSimulate,
+			},
+			want:    test_data.Challenge1,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -152,24 +161,9 @@ func TestReflectModelFromMap(t *testing.T) {
 }
 
 func TestReflectModelPtrFromMap(t *testing.T) {
-	type args struct {
-		modelPtr interface{}
-		object   map[string]interface{}
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := ReflectModelPtrFromMap(tt.args.modelPtr, tt.args.object); (err != nil) != tt.wantErr {
-				t.Errorf("ReflectModelPtrFromMap() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+	var challengeWithId test_data.ChallengeWithId
+	assert.NoError(t, ReflectModelPtrFromMap(&challengeWithId, test_data.Challenge1FromDbSimulate))
+	assert.Equal(t, test_data.Challenge1, challengeWithId)
 }
 
 func TestReflectRetColsValues(t *testing.T) {

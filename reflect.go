@@ -91,23 +91,6 @@ func ReflectRetColsValues(model interface{}) (colsRet []string, valuesRet []inte
 /*
 !!!reflect attention, may cause panic!!!
 */
-func ReflectModelPtrFromMap(modelPtr interface{}, object map[string]interface{}) error {
-	val := ReflectByPtr(modelPtr)
-
-	for name, value := range object {
-		field, find := FieldByJsonTag(val, name)
-		if !find {
-			err := errors.New("did not find")
-			return err
-		}
-		field.Set(Reflect(value).Convert(field.Type()))
-	}
-	return nil
-}
-
-/*
-!!!reflect attention, may cause panic!!!
-*/
 func FieldByJsonTag(v reflect.Value, jsonTag string) (reflect.Value, bool) {
 	for i := 0; i < v.Type().NumField(); i++ {
 		if v.Type().Field(i).Tag.Get("json") == jsonTag {
@@ -122,6 +105,47 @@ func FieldByJsonTag(v reflect.Value, jsonTag string) (reflect.Value, bool) {
 		}
 	}
 	return reflect.Value{}, false
+}
+
+func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
+	switch field.Type().String() {
+	case "bool":
+		switch value.(type) {
+		case int64:
+			value = value == int64(1)
+		case int:
+			value = value == int(1)
+		}
+	case "time.Time":
+		switch value.(type) {
+		case string:
+			t, err := time.Parse(time.RFC3339, value.(string))
+			if err != nil {
+				CheckErr(err)
+			}
+			value = t
+		}
+	default:
+	}
+	return value
+}
+
+/*
+!!!reflect attention, may cause panic!!!
+*/
+func ReflectModelPtrFromMap(modelPtr interface{}, object map[string]interface{}) error {
+	val := ReflectByPtr(modelPtr)
+
+	for name, value := range object {
+		field, find := FieldByJsonTag(val, name)
+		if !find {
+			err := errors.New("did not find")
+			return err
+		}
+		value = ConvertDbValue2Field(value, field)
+		field.Set(Reflect(value).Convert(field.Type()))
+	}
+	return nil
 }
 
 /*
@@ -139,25 +163,7 @@ func ReflectModelFromMap(model interface{}, object map[string]interface{}) (inte
 			err := errors.New("did not find")
 			return nil, err
 		}
-		switch field.Type().String() {
-		case "bool":
-			switch value.(type) {
-			case int64:
-				value = value == int64(1)
-			case int:
-				value = value == int(1)
-			}
-		case "time.Time":
-			switch value.(type) {
-			case string:
-				t, err := time.Parse(time.RFC3339, value.(string))
-				if err != nil {
-					CheckErr(err)
-				}
-				value = t
-			}
-		default:
-		}
+		value = ConvertDbValue2Field(value, field)
 		field.Set(Reflect(value).Convert(field.Type()))
 	}
 	return val.Interface(), nil
