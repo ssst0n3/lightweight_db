@@ -31,7 +31,7 @@ func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper) {
 			resource := wrapper.Resource
 			_, err := c.CreateObject(tableName, resource)
 			if err != nil {
-				CheckErr(err)
+				awesome_libs.CheckErr(err)
 				logrus.Fatal(err)
 			}
 		}

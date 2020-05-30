@@ -2,6 +2,7 @@ package lightweight_db
 
 import (
 	"github.com/pkg/errors"
+	"github.com/ssst0n3/awesome_libs"
 	"reflect"
 	"time"
 )
@@ -121,7 +122,7 @@ func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
 		case string:
 			t, err := time.Parse(time.RFC3339, value.(string))
 			if err != nil {
-				CheckErr(err)
+				awesome_libs.CheckErr(err)
 			}
 			value = t
 		}
