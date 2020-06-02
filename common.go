@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"github.com/ssst0n3/awesome_libs"
+	awesomeError "github.com/ssst0n3/awesome_libs/error"
 )
 
 type Connector struct {
@@ -19,7 +19,7 @@ func (c Connector) Exec(query string, args ...interface{}) (sql.Result, error) {
 	Logger.Debugf("args: %v", args)
 	result, err := c.DB.Exec(query, args...)
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return result, err
 	}
 	return result, nil
@@ -32,7 +32,7 @@ func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	// prepare, otherwise the type is string
 	stmt, err := c.DB.Prepare(query)
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return nil, err
 	}
 	return stmt.Query(args...)
@@ -137,7 +137,7 @@ func (c Connector) ShowObjectById(tableName string, id int64) (map[string]interf
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=?", tableName)
 	rows, err := c.Query(query, id)
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return make(map[string]interface{}), err
 	}
 	object, err := FetchOneRow(rows)
@@ -153,7 +153,7 @@ func (c Connector) IsResourceExistsById(tableName string, id int64) bool {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE id=?", tableName)
 	if err := c.DB.QueryRow(query, id).Scan(&result); err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return false
 	}
 	if result > 0 {
@@ -166,7 +166,7 @@ func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidVal
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=?", tableName, guidColName)
 	if err := c.QueryRow(query, &result, guidValue); err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return false, err
 	}
 
@@ -180,7 +180,7 @@ func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColNam
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=? AND id != ?", tableName, guidColName)
 	if err := c.DB.QueryRow(query, guidValue, id).Scan(&result); err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return false, err
 	}
 	log.Printf("in function IsResourceNameExists, count: %#v", result)
@@ -195,17 +195,17 @@ func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColNam
 model can be struct, can also be pointer(reference)
 */
 func (c Connector) CreateObject(tableName string, model interface{}) (int64, error) {
-	cols, args := ReflectRetColsValues(model)
+	cols, args := RetColsValues(model)
 	query := fmt.Sprintf("INSERT INTO %s (`%s`) VALUES (%s)", tableName, strings.Join(cols, "`,`"), strings.Repeat("?,", len(cols))[:2*len(cols)-1])
 	res, err := c.Exec(query, args...)
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return -1, err
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return -1, err
 	}
 	return id, nil
@@ -216,13 +216,13 @@ func (c Connector) CreateObject(tableName string, model interface{}) (int64, err
 model can be struct, can also be pointer(reference)
 */
 func (c Connector) UpdateObject(id int64, tableName string, model interface{}) error {
-	cols, args := ReflectRetColsValues(model)
+	cols, args := RetColsValues(model)
 	// args... variable parameter
 	args = append(args, id)
 	query := fmt.Sprintf("UPDATE %s SET `%s`=? WHERE `id`=?", tableName, strings.Join(cols, "`=?, `"))
 	_, err := c.Exec(query, args...)
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return err
 	}
 	return nil
@@ -233,7 +233,7 @@ func (c Connector) UpdateObjectSingleColumnById(id int64, tableName string, colu
 	args := []interface{}{value, id}
 	_, err := c.Exec(query, args...)
 	if err != nil {
-		awesome_libs.CheckErr(err)
+		awesomeError.CheckErr(err)
 		return err
 	}
 	return nil
