@@ -32,11 +32,20 @@ func RetColsValues(model interface{}) (colsRet []string, valuesRet []interface{}
 	val := awesomeReflect.Value(model)
 	for i := 0; i < val.Type().NumField(); i++ {
 		if val.Field(i).Kind() == reflect.Struct {
-			cols, values := RetColsValues(val.Field(i).Interface())
-			colsRet = append(colsRet, cols...)
-			valuesRet = append(valuesRet, values...)
+			col := val.Type().Field(i).Tag.Get("json")
+			if len(col) > 0 {
+				colsRet = append(colsRet, col)
+				valuesRet = append(valuesRet, val.Field(i).Interface())
+			} else {
+				cols, values := RetColsValues(val.Field(i).Interface())
+				colsRet = append(colsRet, cols...)
+				valuesRet = append(valuesRet, values...)
+			}
 		} else {
 			col := val.Type().Field(i).Tag.Get("json")
+			if len(col) == 0 {
+				continue
+			}
 			colsRet = append(colsRet, col)
 			valuesRet = append(valuesRet, val.Field(i).Interface())
 		}

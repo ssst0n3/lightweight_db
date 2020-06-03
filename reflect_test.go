@@ -5,40 +5,46 @@ import (
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
+	"time"
 )
 
+// TODO
+func ExampleRetColsValues() {
+
+}
+
 func TestRetColsValues(t *testing.T) {
-	type args struct {
-		model     interface{}
-		colsPtr   *[]string
-		valuesPtr *[]interface{}
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		{
-			name: "",
-			args: args{
-				model: struct {
-					Id   int    `json:"id"`
-					Name string `json:"name"`
-				}{
-					Id:   1,
-					Name: "test_name",
-				},
-				colsPtr:   nil,
-				valuesPtr: nil,
+	t.Run("simple", func(t *testing.T) {
+		colsRet, valuesRet := RetColsValues(struct {
+			Name string `json:"name"`
+		}{"test"})
+		assert.Equal(t, []string{"name"}, colsRet)
+		assert.Equal(t, []interface{}{"test"}, valuesRet)
+	})
+	t.Run("time.Time", func(t *testing.T) {
+		now := time.Now()
+		colsRet, valuesRet := RetColsValues(struct {
+			T time.Time `json:"t"`
+		}{now})
+		assert.Equal(t, []string{"t"}, colsRet)
+		assert.Equal(t, []interface{}{now}, valuesRet)
+	})
+	t.Run("nested struct", func(t *testing.T) {
+		type Nested struct {
+			Nested bool `json:"nested"`
+		}
+		colsRet, valuesRet := RetColsValues(struct {
+			Id uint `json:"id"`
+			Nested
+		}{
+			Id: 1,
+			Nested: Nested{
+				Nested: true,
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			cols, args := RetColsValues(tt.args.model)
-			assert.Equal(t, []string{"id", "name"}, cols)
-			assert.Equal(t, []interface{}{1, "test_name"}, args)
 		})
-	}
+		assert.Equal(t, []string{"id", "nested"}, colsRet)
+		assert.Equal(t, []interface{}{uint(1), true}, valuesRet)
+	})
 }
 
 func TestBindModelFromMap(t *testing.T) {
