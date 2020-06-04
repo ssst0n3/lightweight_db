@@ -21,19 +21,19 @@ func init() {
 }
 
 func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper) {
-	logrus.Info("remove all in table categories")
+	Logger.Info("remove all in table categories")
 	c.DeleteAllObjects(tableName)
 
 	c.ResetAutoIncrementSqlite(tableName)
 
-	logrus.Info("import test data")
+	Logger.Info("import test data")
 	if len(r) > 0 {
 		for _, wrapper := range r {
 			resource := wrapper.Resource
 			_, err := c.CreateObject(tableName, resource)
 			if err != nil {
 				awesomeError.CheckErr(err)
-				logrus.Fatal(err)
+				Logger.Fatal(err)
 			}
 		}
 	}
