@@ -3,9 +3,8 @@ package lightweight_db
 import (
 	"database/sql"
 	"fmt"
-	"log"
-	"strings"
 	awesomeError "github.com/ssst0n3/awesome_libs/error"
+	"strings"
 )
 
 type Connector struct {
@@ -183,7 +182,7 @@ func (c Connector) IsResourceExistsExceptSelfByGuid(tableName string, guidColNam
 		awesomeError.CheckErr(err)
 		return false, err
 	}
-	log.Printf("in function IsResourceNameExists, count: %#v", result)
+	Logger.Debugf("in function IsResourceNameExists, count: %#v", result)
 	if result > 0 {
 		return true, nil
 	}
