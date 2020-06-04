@@ -66,7 +66,8 @@ func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
 	case "time.Time":
 		switch value.(type) {
 		case string:
-			t, err := time.Parse(time.RFC3339, value.(string))
+			// you can modify it by lightweight_db.TimeFormat="xxx"
+			t, err := time.Parse(TimeFormat, value.(string))
 			if err != nil {
 				awesomeError.CheckErr(err)
 			}
