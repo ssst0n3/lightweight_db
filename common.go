@@ -148,17 +148,17 @@ func (c Connector) ShowObjectOnePropertyById(tableName string, columnName string
 	return object[columnName], err
 }
 
-func (c Connector) IsResourceExistsById(tableName string, id int64) bool {
+func (c Connector) IsResourceExistsById(tableName string, id int64) (bool, error) {
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE id=?", tableName)
 	if err := c.DB.QueryRow(query, id).Scan(&result); err != nil {
 		awesomeError.CheckErr(err)
-		return false
+		return false, err
 	}
 	if result > 0 {
-		return true
+		return true, nil
 	}
-	return false
+	return false, nil
 }
 
 func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidValue interface{}) (bool, error) {
