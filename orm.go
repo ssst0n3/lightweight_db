@@ -65,6 +65,9 @@ func (c Connector) OrmQueryRowsRet(model interface{}, query string, args ...inte
 		}
 		result = append(result, record)
 	}
+	if result == nil {
+		result = []interface{}{}
+	}
 	return result, nil
 }
 
