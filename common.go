@@ -24,6 +24,20 @@ func (c Connector) Exec(query string, args ...interface{}) (sql.Result, error) {
 	return result, nil
 }
 
+func (c Connector)Transaction(query string, args ...interface{}) (sql.Result, error) {
+	if tx, err := c.DB.Begin(); err != nil {
+		awesomeError.CheckErr(err)
+		return nil, err
+	} else {
+		if result, err := tx.Exec(query, args...); err != nil {
+			awesomeError.CheckErr(err)
+			return nil, err
+		} else {
+			return result, nil
+		}
+	}
+}
+
 func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	Logger.Debugf("query: %s", query)
 	Logger.Debugf("args: %v", args)
