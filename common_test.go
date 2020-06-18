@@ -2,7 +2,7 @@ package lightweight_db
 
 import (
 	"github.com/sirupsen/logrus"
-	awesomeError "github.com/ssst0n3/awesome_libs/error"
+	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	_ "modernc.org/sqlite"
@@ -32,7 +32,7 @@ func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper) {
 			resource := wrapper.Resource
 			_, err := c.CreateObject(tableName, resource)
 			if err != nil {
-				awesomeError.CheckErr(err)
+				awesome_error.CheckErr(err)
 				Logger.Fatal(err)
 			}
 		}

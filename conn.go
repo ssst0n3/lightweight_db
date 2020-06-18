@@ -2,7 +2,7 @@ package lightweight_db
 
 import (
 	"database/sql"
-	awesomeError "github.com/ssst0n3/awesome_libs/error"
+	"github.com/ssst0n3/awesome_libs/awesome_error"
 )
 
 func (c *Connector) Init() {
@@ -16,7 +16,7 @@ func (c *Connector) Init() {
 func (c *Connector) Connect() (err error) {
 	c.DB, err = sql.Open(c.DriverName, c.Dsn)
 	if err != nil {
-		awesomeError.CheckErr(err)
+		awesome_error.CheckErr(err)
 		return err
 	}
 	return c.DB.Ping()

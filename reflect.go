@@ -2,8 +2,8 @@ package lightweight_db
 
 import (
 	"github.com/pkg/errors"
-	awesomeError "github.com/ssst0n3/awesome_libs/error"
-	awesomeReflect "github.com/ssst0n3/awesome_libs/reflect"
+	"github.com/ssst0n3/awesome_libs/awesome_error"
+	"github.com/ssst0n3/awesome_libs/awesome_reflect"
 	"reflect"
 	"time"
 )
@@ -13,7 +13,7 @@ import (
 */
 // TODO: add test cases
 func BindColsValues(model interface{}, colsPtr *[]string, valuesPtr *[]interface{}) {
-	val := awesomeReflect.Value(model)
+	val := awesome_reflect.Value(model)
 	for i := 0; i < val.Type().NumField(); i++ {
 		if val.Field(i).Kind() == reflect.Struct {
 			BindColsValues(val.Field(i).Interface(), colsPtr, valuesPtr)
@@ -29,7 +29,7 @@ func BindColsValues(model interface{}, colsPtr *[]string, valuesPtr *[]interface
 !!!reflect attention, may cause panic!!!
 */
 func RetColsValues(model interface{}) (colsRet []string, valuesRet []interface{}) {
-	val := awesomeReflect.Value(model)
+	val := awesome_reflect.Value(model)
 	for i := 0; i < val.Type().NumField(); i++ {
 		if val.Field(i).Kind() == reflect.Struct {
 			col := val.Type().Field(i).Tag.Get("json")
@@ -69,7 +69,7 @@ func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
 			// you can modify it by lightweight_db.TimeFormat="xxx"
 			t, err := time.Parse(TimeFormat, value.(string))
 			if err != nil {
-				awesomeError.CheckErr(err)
+				awesome_error.CheckErr(err)
 			}
 			value = t
 		}
@@ -82,16 +82,16 @@ func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
 !!!reflect attention, may cause panic!!!
 */
 func BindModelFromMap(modelPtr interface{}, object map[string]interface{}) error {
-	val := awesomeReflect.ValueByPtr(modelPtr)
+	val := awesome_reflect.ValueByPtr(modelPtr)
 
 	for name, value := range object {
-		field, find := awesomeReflect.FieldByJsonTag(val, name)
+		field, find := awesome_reflect.FieldByJsonTag(val, name)
 		if !find {
 			err := errors.New("did not find")
 			return err
 		}
 		value = ConvertDbValue2Field(value, field)
-		field.Set(awesomeReflect.Value(value).Convert(field.Type()))
+		field.Set(awesome_reflect.Value(value).Convert(field.Type()))
 	}
 	return nil
 }
@@ -100,16 +100,16 @@ func BindModelFromMap(modelPtr interface{}, object map[string]interface{}) error
 !!!reflect attention, may cause panic!!!
 */
 func RetModelFromMap(model interface{}, object map[string]interface{}) (interface{}, error) {
-	awesomeReflect.MustNotPointer(model)
+	awesome_reflect.MustNotPointer(model)
 	val := reflect.New(reflect.TypeOf(model)).Elem()
 	for name, value := range object {
-		field, find := awesomeReflect.FieldByJsonTag(val, name)
+		field, find := awesome_reflect.FieldByJsonTag(val, name)
 		if !find {
 			err := errors.New("did not find")
 			return nil, err
 		}
 		value = ConvertDbValue2Field(value, field)
-		field.Set(awesomeReflect.Value(value).Convert(field.Type()))
+		field.Set(awesome_reflect.Value(value).Convert(field.Type()))
 	}
 	return val.Interface(), nil
 }
