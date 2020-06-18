@@ -26,7 +26,7 @@ func (c Connector) ResetAutoIncrementMysql(tableName string) {
 	Logger.Info("set id start from 0")
 	query := fmt.Sprintf("ALTER TABLE %s AUTO_INCREMENT = 1", tableName)
 	Logger.Debugf("query: %s", query)
-	_, err := c.Exec(query)
+	_, err := c.Transaction(query)
 	if err != nil {
 		Logger.Fatal(err)
 	}
