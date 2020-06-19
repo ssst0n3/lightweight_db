@@ -2,6 +2,8 @@ package lightweight_db
 
 import (
 	"fmt"
+	"github.com/ssst0n3/awesome_libs/awesome_error"
+	"github.com/ssst0n3/lightweight_db/test/test_data"
 )
 
 func (c Connector) DeleteAllObjects(tableName string) {
@@ -30,5 +32,21 @@ func (c Connector) ResetAutoIncrementMysql(tableName string) {
 	if err != nil {
 		Logger.Fatal(err)
 	}
-	//	TODO: need commit or not?
+}
+
+func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper, funcResetAutoIncrement func(tableName string)) {
+	Logger.Info(fmt.Sprintf("remove all in table %s", tableName))
+	c.DeleteAllObjects(tableName)
+
+	Logger.Info("reset id")
+	funcResetAutoIncrement(tableName)
+
+	Logger.Info("import test data")
+	if len(r) > 0 {
+		for _, wrapper := range r {
+			resource := wrapper.Resource
+			_, err := c.CreateObject(tableName, resource)
+			awesome_error.CheckFatal(err)
+		}
+	}
 }
