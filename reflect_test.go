@@ -87,3 +87,13 @@ func TestRetModelFromMap(t *testing.T) {
 		})
 	}
 }
+
+func TestBindModelFromMapList(t *testing.T) {
+	model := []struct {
+		A string `json:"a"`
+	}{
+		{}, {},
+	}
+	assert.NoError(t, BindModelFromMapList(&model, []map[string]interface{}{{"a": "b"},{"a": "c"}}))
+	Logger.Info(model)
+}

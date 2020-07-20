@@ -2,42 +2,45 @@ package lightweight_db
 
 import (
 	"github.com/sirupsen/logrus"
-	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	_ "modernc.org/sqlite"
 	"testing"
 )
 
+const (
+	driverName = "sqlite"
+)
+
 var Conn Connector
 
 func init() {
 	Conn = Connector{
-		DriverName: "sqlite",
+		DriverName: driverName,
 		Dsn:        "test/test_data/base.sqlite",
 	}
 	Conn.Init()
 	Logger.SetLevel(logrus.DebugLevel)
 }
 
-func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper) {
-	Logger.Info("remove all in table categories")
-	c.DeleteAllObjects(tableName)
-
-	c.ResetAutoIncrementSqlite(tableName)
-
-	Logger.Info("import test data")
-	if len(r) > 0 {
-		for _, wrapper := range r {
-			resource := wrapper.Resource
-			_, err := c.CreateObject(tableName, resource)
-			if err != nil {
-				awesome_error.CheckErr(err)
-				Logger.Fatal(err)
-			}
-		}
-	}
-}
+//func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper) {
+//	Logger.Info("remove all in table categories")
+//	c.DeleteAllObjects(tableName)
+//
+//	c.ResetAutoIncrementSqlite(tableName)
+//
+//	Logger.Info("import test data")
+//	if len(r) > 0 {
+//		for _, wrapper := range r {
+//			resource := wrapper.Resource
+//			_, err := c.CreateObject(tableName, resource)
+//			if err != nil {
+//				awesome_error.CheckErr(err)
+//				Logger.Fatal(err)
+//			}
+//		}
+//	}
+//}
 
 func TestConnector_IsResourceExistsByGuid(t *testing.T) {
 	t.Run("not exist", func(t *testing.T) {
@@ -48,7 +51,7 @@ func TestConnector_IsResourceExistsByGuid(t *testing.T) {
 	})
 
 	t.Run("exist", func(t *testing.T) {
-		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges)
+		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite)
 		exists, err := Conn.IsResourceExistsByGuid(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, test_data.Challenge1.Name)
 		assert.NoError(t, err)
 		assert.Equal(t, true, exists)
@@ -56,7 +59,7 @@ func TestConnector_IsResourceExistsByGuid(t *testing.T) {
 }
 
 func TestConnector_UpdateObject(t *testing.T) {
-	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges)
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite)
 	t.Run("simple struct", func(t *testing.T) {
 		err := Conn.UpdateObject(int64(test_data.Challenge1.Id), test_data.TableNameChallenge, test_data.Challenge1Update)
 		assert.NoError(t, err)

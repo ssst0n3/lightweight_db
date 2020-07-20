@@ -71,6 +71,21 @@ func (c Connector) OrmQueryRowsRet(model interface{}, query string, args ...inte
 	return result, nil
 }
 
+func (c Connector)OrmQueryRowsBind(modelPtr interface{}, query string, args ...interface{}) error {
+	awesome_reflect.MustPointer(modelPtr)
+	if rows, err := c.Query(query, args...); err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	} else {
+		if object, err := FetchRows(rows); err != nil {
+			awesome_error.CheckErr(err)
+			return err
+		} else {
+			return BindModelFromMapList(modelPtr, object)
+		}
+	}
+}
+
 /*
 !!!reflect attention, may cause panic!!!
 */
