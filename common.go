@@ -24,7 +24,7 @@ func (c Connector) Exec(query string, args ...interface{}) (sql.Result, error) {
 	return result, nil
 }
 
-func (c Connector)Transaction(query string, args ...interface{}) (sql.Result, error) {
+func (c Connector) Transaction(query string, args ...interface{}) (sql.Result, error) {
 	if tx, err := c.DB.Begin(); err != nil {
 		awesome_error.CheckErr(err)
 		return nil, err
@@ -250,6 +250,15 @@ func (c Connector) UpdateObjectSingleColumnById(id int64, tableName string, colu
 		return err
 	}
 	return nil
+}
+
+func (c Connector) CountTable(tableName string) (count uint, err error) {
+	query := fmt.Sprintf("SELECT COUNT(*) FROM %s", tableName)
+	if err = c.QueryRow(query, &count); err != nil {
+		awesome_error.CheckErr(err)
+		return
+	}
+	return
 }
 
 func (c *Connector) Close() error {

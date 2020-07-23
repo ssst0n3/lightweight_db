@@ -68,3 +68,22 @@ func TestConnector_UpdateObject(t *testing.T) {
 		// TODO: use another model
 	})
 }
+
+func TestConnector_CountTable(t *testing.T) {
+	t.Run("1", func(t *testing.T) {
+		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite)
+		count, err := Conn.CountTable(test_data.TableNameChallenge)
+		assert.NoError(t, err)
+		assert.Equal(t, uint(1), count)
+	})
+	t.Run("empty", func(t *testing.T) {
+		Conn.DeleteAllObjects(test_data.TableNameChallenge)
+		count, err := Conn.CountTable(test_data.TableNameChallenge)
+		assert.NoError(t, err)
+		assert.Equal(t, uint(0), count)
+	})
+	t.Run("table not exists", func(t *testing.T) {
+		_, err := Conn.CountTable("not_exists")
+		assert.Error(t, err)
+	})
+}
