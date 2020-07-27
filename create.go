@@ -26,3 +26,25 @@ func (c Connector) CreateObject(tableName string, model interface{}) (int64, err
 	}
 	return id, nil
 }
+
+func CheckErrorDuplicate(err error) bool {
+	e := strings.ToLower(err.Error())
+	return strings.Contains(e, "duplicate") || strings.Contains(e, "unique constraint")
+}
+
+func (c Connector) CreateObjectPreventDuplicate(tableName string, model interface{}) (exists bool, id int64, err error) {
+	//	https://www.mysqltutorial.org/mysql-unique-constraint/
+	// Error Code: 1062. Duplicate entry 'ABC Inc-4000 North 1st Street' for key 'uc_name_address'
+
+	// https://www.sqlitetutorial.net/sqlite-unique-constraint/
+	// https://www.sqlitetutorial.net/sqlite-unique-constraint/
+	id, err = c.CreateObject(tableName, model)
+	if err != nil {
+		awesome_error.CheckWarning(err)
+		if CheckErrorDuplicate(err) {
+			exists = true
+			err = nil
+		}
+	}
+	return
+}

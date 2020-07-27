@@ -41,8 +41,8 @@ func (c Connector) InitTable(tableName string, r []test_data.ResourceWrapper, fu
 	Logger.Info("reset id")
 	funcResetAutoIncrement(tableName)
 
-	Logger.Info("import test data")
 	if len(r) > 0 {
+		Logger.Info("import test data")
 		for _, wrapper := range r {
 			resource := wrapper.Resource
 			_, err := c.CreateObject(tableName, resource)
