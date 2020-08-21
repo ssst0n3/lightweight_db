@@ -37,7 +37,7 @@ func (c Connector) ResetAutoIncrementMysql(tableName string) {
 func (c Connector) InitTable(
 	tableName string, r []test_data.ResourceWrapper,
 	funcResetAutoIncrement func(tableName string),
-	taskBeforeCreateObject func(wrapper test_data.ResourceWrapper) test_data.ResourceWrapper,
+	taskBeforeCreateObject func(wrapper *test_data.ResourceWrapper),
 ) {
 	Logger.Info(fmt.Sprintf("remove all in table %s", tableName))
 	c.DeleteAllObjects(tableName)
@@ -49,7 +49,7 @@ func (c Connector) InitTable(
 		Logger.Info("import test data")
 		for _, wrapper := range r {
 			if taskBeforeCreateObject != nil {
-				wrapper = taskBeforeCreateObject(wrapper)
+				taskBeforeCreateObject(&wrapper)
 			}
 			_, err := c.CreateObject(tableName, wrapper.Resource)
 			awesome_error.CheckFatal(err)
