@@ -88,7 +88,7 @@ func BindModelFromMap(modelPtr interface{}, object map[string]interface{}) error
 	for name, value := range object {
 		field, find := awesome_reflect.FieldByJsonTag(val, name)
 		if !find {
-			err := errors.New(fmt.Sprintf("field: %s did not find", field))
+			err := errors.New(fmt.Sprintf("field: %s did not find", name))
 			return err
 		}
 		value = ConvertDbValue2Field(value, field)
