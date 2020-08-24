@@ -1,6 +1,7 @@
 package lightweight_db
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/awesome_libs/awesome_reflect"
@@ -87,7 +88,7 @@ func BindModelFromMap(modelPtr interface{}, object map[string]interface{}) error
 	for name, value := range object {
 		field, find := awesome_reflect.FieldByJsonTag(val, name)
 		if !find {
-			err := errors.New("did not find")
+			err := errors.New(fmt.Sprintf("field: %s did not find", field))
 			return err
 		}
 		value = ConvertDbValue2Field(value, field)
