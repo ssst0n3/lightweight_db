@@ -89,9 +89,36 @@ func TestRetModelFromMap(t *testing.T) {
 }
 
 func TestBindModelFromMapList(t *testing.T) {
-	var model []struct {
-		A string `json:"a"`
-	}
-	assert.NoError(t, BindModelFromMapList(&model, []map[string]interface{}{{"a": "b"},{"a": "c"}}))
-	Logger.Info(model)
+	t.Run("classic", func(t *testing.T) {
+		var model []struct {
+			A string `json:"a"`
+		}
+		assert.NoError(t, BindModelFromMapList(&model, []map[string]interface{}{{"a": "b"}, {"a": "c"}}))
+		Logger.Info(model)
+	})
+	t.Run("nested struct", func(t *testing.T) {
+		type Category struct {
+			Name        string `json:"name"`
+			Parent      uint64 `json:"parent"`
+			Description string `json:"description"`
+		}
+		type CategoryWithId struct {
+			Id uint `json:"id"`
+			Category
+		}
+		var categoryWithIds []CategoryWithId
+		assert.NoError(t, BindModelFromMapList(&categoryWithIds, []map[string]interface{}{
+			{"id": 1, "name": "Web", "parent": 0},
+		}))
+		assert.Equal(t, []CategoryWithId{
+			{
+				Id: 1,
+				Category: Category{
+					Name:        "Web",
+					Parent:      0,
+					Description: "",
+				},
+			},
+		}, categoryWithIds)
+	})
 }

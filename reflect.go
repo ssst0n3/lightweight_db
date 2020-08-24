@@ -121,17 +121,17 @@ func RetModelFromMap(model interface{}, object map[string]interface{}) (interfac
 func BindModelFromMapList(modelPtr interface{}, objects []map[string]interface{}) error {
 	val := awesome_reflect.ValueByPtr(modelPtr)
 	for _, object := range objects {
+		element := reflect.New(val.Type().Elem()).Elem()
 		for name, value := range object {
-			element := reflect.New(val.Type().Elem()).Elem()
 			field, find := awesome_reflect.FieldByJsonTag(element, name)
 			if !find {
-				err := errors.New("did not find")
+				err := errors.New(fmt.Sprintf("field : %s did not find", name))
 				return err
 			}
 			value = ConvertDbValue2Field(value, field)
 			field.Set(awesome_reflect.Value(value).Convert(field.Type()))
-			val.Set(reflect.Append(val, element))
 		}
+		val.Set(reflect.Append(val, element))
 	}
 	return nil
 }

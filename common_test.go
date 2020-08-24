@@ -43,7 +43,7 @@ func init() {
 //}
 
 func TestConnector_UpdateObject(t *testing.T) {
-	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite)
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	t.Run("simple struct", func(t *testing.T) {
 		err := Conn.UpdateObject(int64(test_data.Challenge1.Id), test_data.TableNameChallenge, test_data.Challenge1Update)
 		assert.NoError(t, err)
@@ -55,7 +55,7 @@ func TestConnector_UpdateObject(t *testing.T) {
 
 func TestConnector_CountTable(t *testing.T) {
 	t.Run("1", func(t *testing.T) {
-		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite)
+		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 		count, err := Conn.CountTable(test_data.TableNameChallenge)
 		assert.NoError(t, err)
 		assert.Equal(t, uint(1), count)

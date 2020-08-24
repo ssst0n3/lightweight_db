@@ -15,7 +15,7 @@ func TestConnector_IsResourceExistsByGuid(t *testing.T) {
 	})
 
 	t.Run("exist", func(t *testing.T) {
-		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite)
+		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 		exists, err := Conn.IsResourceExistsByGuid(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, test_data.Challenge1.Name)
 		assert.NoError(t, err)
 		assert.Equal(t, true, exists)
