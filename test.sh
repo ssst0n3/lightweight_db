@@ -1,2 +1,3 @@
 #!/bin/bash
+go clean -testcache
 go test -count=1 -parallel 1 -v ./...

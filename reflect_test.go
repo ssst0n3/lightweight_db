@@ -109,12 +109,21 @@ func TestBindModelFromMapList(t *testing.T) {
 		var categoryWithIds []CategoryWithId
 		assert.NoError(t, BindModelFromMapList(&categoryWithIds, []map[string]interface{}{
 			{"id": 1, "name": "Web", "parent": 0},
+			{"id": 2, "name": "Pwn", "parent": 0},
 		}))
 		assert.Equal(t, []CategoryWithId{
 			{
 				Id: 1,
 				Category: Category{
 					Name:        "Web",
+					Parent:      0,
+					Description: "",
+				},
+			},
+			{
+				Id: 2,
+				Category: Category{
+					Name:        "Pwn",
 					Parent:      0,
 					Description: "",
 				},
