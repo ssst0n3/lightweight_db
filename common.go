@@ -3,6 +3,7 @@ package lightweight_db
 import (
 	"database/sql"
 	"fmt"
+	"github.com/ssst0n3/awesome_libs"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"strings"
 )
@@ -180,7 +181,13 @@ func (c Connector) UpdateObject(id int64, tableName string, model interface{}) e
 }
 
 func (c Connector) UpdateObjectSingleColumnById(id int64, tableName string, columnName string, value interface{}) error {
-	query := fmt.Sprintf("UPDATE %s SET %s=? WHERE id=?", tableName, columnName)
+	query := awesome_libs.Format(
+		"UPDATE `{.table}` SET `{.column}`=? WHERE id=?",
+		awesome_libs.Dict{
+			"table":  tableName,
+			"column": columnName,
+		},
+	)
 	args := []interface{}{value, id}
 	_, err := c.Exec(query, args...)
 	if err != nil {
