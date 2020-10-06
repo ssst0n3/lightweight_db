@@ -1,7 +1,6 @@
 package lightweight_db
 
 import (
-	"github.com/ssst0n3/lightweight_db/example/conn"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -9,15 +8,15 @@ import (
 
 func TestConnector_IsResourceExistsByGuid(t *testing.T) {
 	t.Run("not exist", func(t *testing.T) {
-		conn.Conn.DeleteAllObjects(test_data.TableNameChallenge)
-		exists, err := conn.Conn.IsResourceExistsByGuid(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, test_data.Challenge1.Name)
+		Conn.DeleteAllObjects(test_data.TableNameChallenge)
+		exists, err := Conn.IsResourceExistsByGuid(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, test_data.Challenge1.Name)
 		assert.NoError(t, err)
 		assert.Equal(t, false, exists)
 	})
 
 	t.Run("exist", func(t *testing.T) {
-		conn.Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, conn.Conn.ResetAutoIncrementSqlite, nil)
-		exists, err := conn.Conn.IsResourceExistsByGuid(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, test_data.Challenge1.Name)
+		Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+		exists, err := Conn.IsResourceExistsByGuid(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, test_data.Challenge1.Name)
 		assert.NoError(t, err)
 		assert.Equal(t, true, exists)
 	})

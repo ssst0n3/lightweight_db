@@ -1,28 +1,27 @@
 package lightweight_db
 
 import (
-	"github.com/ssst0n3/lightweight_db/example/conn"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestConnector_OrmListTableUsingReflectRet(t *testing.T) {
-	_, err := conn.Conn.OrmListTableUsingReflectRet(test_data.TableNameChallenge, test_data.ChallengeWithId{})
+	_, err := Conn.OrmListTableUsingReflectRet(test_data.TableNameChallenge, test_data.ChallengeWithId{})
 	assert.NoError(t, err)
 }
 
 func TestConnector_OrmShowObjectByIdUsingReflectBind(t *testing.T) {
-	conn.Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, conn.Conn.ResetAutoIncrementSqlite, nil)
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	var challengeWithId test_data.ChallengeWithId
-	assert.NoError(t, conn.Conn.OrmShowObjectByIdUsingReflectBind(test_data.TableNameChallenge, 1, &challengeWithId))
+	assert.NoError(t, Conn.OrmShowObjectByIdUsingReflectBind(test_data.TableNameChallenge, 1, &challengeWithId))
 	assert.Equal(t, test_data.Challenge1, challengeWithId)
 }
 
 func TestConnector_OrmShowObjectOnePropertyByIdUsingJsonBind(t *testing.T) {
-	conn.Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, conn.Conn.ResetAutoIncrementSqlite, nil)
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	var name string
-	assert.NoError(t, conn.Conn.OrmShowObjectOnePropertyByIdUsingJsonBind(
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyByIdUsingJsonBind(
 		test_data.TableNameChallenge,
 		test_data.ColumnNameChallengeName,
 		1,

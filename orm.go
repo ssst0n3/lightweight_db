@@ -2,6 +2,7 @@ package lightweight_db
 
 import (
 	"fmt"
+	"github.com/ssst0n3/awesome_libs"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/awesome_libs/awesome_reflect"
 )
@@ -71,7 +72,7 @@ func (c Connector) OrmQueryRowsRet(model interface{}, query string, args ...inte
 	return result, nil
 }
 
-func (c Connector)OrmQueryRowsBind(modelPtr interface{}, query string, args ...interface{}) error {
+func (c Connector) OrmQueryRowsBind(modelPtr interface{}, query string, args ...interface{}) error {
 	awesome_reflect.MustPointer(modelPtr)
 	if rows, err := c.Query(query, args...); err != nil {
 		awesome_error.CheckErr(err)
@@ -150,4 +151,16 @@ func (c Connector) OrmShowObjectOnePropertyByIdUsingJsonBind(tableName string, c
 		return err
 	}
 	return Value2StructByJson(property, modelPtr)
+}
+
+func (c Connector) OrmShowObjectOnePropertyBydIdByReflectBind(tableName string, columnName string, id int64, modelPtr interface{}) error {
+	awesome_reflect.MustPointer(modelPtr)
+	query := awesome_libs.Format(
+		"SELECT {.column} FROM {.table} WHERE id=?",
+		awesome_libs.Dict{
+			"column": columnName,
+			"table":  tableName,
+		},
+	)
+	return c.QueryRow(query, modelPtr, id)
 }
