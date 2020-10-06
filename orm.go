@@ -156,7 +156,7 @@ func (c Connector) OrmShowObjectOnePropertyByIdUsingJsonBind(tableName string, c
 func (c Connector) OrmShowObjectOnePropertyBydIdByReflectBind(tableName string, columnName string, id int64, modelPtr interface{}) error {
 	awesome_reflect.MustPointer(modelPtr)
 	query := awesome_libs.Format(
-		"SELECT {.column} FROM {.table} WHERE id=?",
+		"SELECT `{.column}` FROM `{.table}` WHERE id=?",
 		awesome_libs.Dict{
 			"column": columnName,
 			"table":  tableName,
