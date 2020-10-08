@@ -106,8 +106,10 @@ func RetModelFromMap(model interface{}, object map[string]interface{}) (interfac
 	for name, value := range object {
 		field, find := awesome_reflect.FieldByJsonTag(val, name)
 		if !find {
-			err := errors.New("did not find")
-			return nil, err
+			err := errors.New( fmt.Sprintf("filed: %s did not find", name))
+			awesome_error.CheckDebug(err)
+			continue
+			//return nil, err
 		}
 		value = ConvertDbValue2Field(value, field)
 		field.Set(awesome_reflect.Value(value).Convert(field.Type()))
