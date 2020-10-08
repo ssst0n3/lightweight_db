@@ -45,7 +45,6 @@ func init() {
 //}
 
 func TestFetchRows(t *testing.T) {
-	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	query := "SELECT 1"
 	rows, err := Conn.Query(query)
 	assert.NoError(t, err)
@@ -58,7 +57,6 @@ func TestFetchRows(t *testing.T) {
 }
 
 func TestFetchOneRow(t *testing.T) {
-	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	query := "SELECT 1"
 	rows, err := Conn.Query(query)
 	assert.NoError(t, err)
@@ -71,7 +69,6 @@ func TestFetchOneRow(t *testing.T) {
 }
 
 func TestConnector_ListObjects(t *testing.T) {
-	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	query := "SELECT 1"
 	objects, err := Conn.ListObjects(query)
 	assert.NoError(t, err)
@@ -79,6 +76,25 @@ func TestConnector_ListObjects(t *testing.T) {
 		{"1": int64(1)},
 	}
 	assert.Equal(t, expect, objects)
+}
+
+func TestConnector_MapObjectById(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		query := "SELECT 1 as id"
+		objects, err := Conn.MapObjectById(query)
+		assert.NoError(t, err)
+		expect := map[int64]awesome_libs.Dict{
+			int64(1): {"id": int64(1)},
+		}
+		assert.Equal(t, expect, objects)
+	})
+	t.Run("empty", func(t *testing.T) {
+		query := "SELECT 1 as id limit 0"
+		objects, err := Conn.MapObjectById(query)
+		assert.NoError(t, err)
+		expect := map[int64]awesome_libs.Dict{}
+		assert.Equal(t, expect, objects)
+	})
 }
 
 func TestConnector_UpdateObject(t *testing.T) {

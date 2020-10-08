@@ -129,9 +129,31 @@ func (c Connector) ListObjects(query string, args ...interface{}) ([]awesome_lib
 	return objects, err
 }
 
+func (c Connector) MapObjectById(query string, args ...interface{}) (map[int64]awesome_libs.Dict, error) {
+	objects, err := c.ListObjects(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	result := map[int64]awesome_libs.Dict{}
+	for _, object := range objects {
+		id := object["id"].(int64)
+		result[id] = object
+	}
+	return result, err
+}
+
 func (c Connector) ListAllPropertiesByTableName(tableName string) ([]awesome_libs.Dict, error) {
 	query := fmt.Sprintf("SELECT * FROM %s", tableName)
 	objects, err := c.ListObjects(query)
+	if err != nil {
+		return nil, err
+	}
+	return objects, err
+}
+
+func (c Connector)MapAllPropertiesByTableName(tableName string) (map[int64]awesome_libs.Dict, error)  {
+	query := fmt.Sprintf("SELECT * FROM %s", tableName)
+	objects, err := c.MapObjectById(query)
 	if err != nil {
 		return nil, err
 	}
