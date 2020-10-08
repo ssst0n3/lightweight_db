@@ -1,6 +1,7 @@
 package lightweight_db
 
 import (
+	"github.com/ssst0n3/awesome_libs"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	"reflect"
@@ -56,7 +57,7 @@ func TestBindModelFromMap(t *testing.T) {
 func TestRetModelFromMap(t *testing.T) {
 	type args struct {
 		model  interface{}
-		object map[string]interface{}
+		object awesome_libs.Dict
 	}
 	tests := []struct {
 		name    string
@@ -93,7 +94,7 @@ func TestBindModelFromMapList(t *testing.T) {
 		var model []struct {
 			A string `json:"a"`
 		}
-		assert.NoError(t, BindModelFromMapList(&model, []map[string]interface{}{{"a": "b"}, {"a": "c"}}))
+		assert.NoError(t, BindModelFromMapList(&model, []awesome_libs.Dict{{"a": "b"}, {"a": "c"}}))
 		Logger.Info(model)
 	})
 	t.Run("nested struct", func(t *testing.T) {
@@ -107,7 +108,7 @@ func TestBindModelFromMapList(t *testing.T) {
 			Category
 		}
 		var categoryWithIds []CategoryWithId
-		assert.NoError(t, BindModelFromMapList(&categoryWithIds, []map[string]interface{}{
+		assert.NoError(t, BindModelFromMapList(&categoryWithIds, []awesome_libs.Dict{
 			{"id": 1, "name": "Web", "parent": 0},
 			{"id": 2, "name": "Pwn", "parent": 0},
 		}))

@@ -1,7 +1,9 @@
 package lightweight_db
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	"github.com/sirupsen/logrus"
+	"github.com/ssst0n3/awesome_libs"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	_ "modernc.org/sqlite"
@@ -41,6 +43,43 @@ func init() {
 //		}
 //	}
 //}
+
+func TestFetchRows(t *testing.T) {
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+	query := "SELECT 1"
+	rows, err := Conn.Query(query)
+	assert.NoError(t, err)
+	objects, err := FetchRows(rows)
+	spew.Dump(objects)
+	expect := []awesome_libs.Dict{
+		{"1": int64(1)},
+	}
+	assert.Equal(t, expect, objects)
+}
+
+func TestFetchOneRow(t *testing.T) {
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+	query := "SELECT 1"
+	rows, err := Conn.Query(query)
+	assert.NoError(t, err)
+	objects, err := FetchOneRow(rows)
+	spew.Dump(objects)
+	expect := awesome_libs.Dict{
+		"1": int64(1),
+	}
+	assert.Equal(t, expect, objects)
+}
+
+func TestConnector_ListObjects(t *testing.T) {
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+	query := "SELECT 1"
+	objects, err := Conn.ListObjects(query)
+	assert.NoError(t, err)
+	expect := []awesome_libs.Dict{
+		{"1": int64(1)},
+	}
+	assert.Equal(t, expect, objects)
+}
 
 func TestConnector_UpdateObject(t *testing.T) {
 	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)

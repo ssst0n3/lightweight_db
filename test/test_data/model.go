@@ -1,5 +1,7 @@
 package test_data
 
+import "github.com/ssst0n3/awesome_libs"
+
 /*
 CREATE TABLE IF NOT EXISTS challenge
 (
@@ -72,7 +74,7 @@ func Bool2Int64(b bool) int64 {
 	}
 }
 
-var Challenge1FromDbSimulate = map[string]interface{}{
+var Challenge1FromDbSimulate = awesome_libs.Dict{
 	"id":     int64(Challenge1.Id),
 	"name":   Challenge1.Name,
 	"score":  int64(Challenge1.Score),

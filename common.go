@@ -52,8 +52,8 @@ func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	return stmt.Query(args...)
 }
 
-func FetchRows(rows *sql.Rows) ([]map[string]interface{}, error) {
-	result := make([]map[string]interface{}, 0)
+func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
+	result := make([]awesome_libs.Dict, 0)
 
 	// Get column names
 	columns, err := rows.Columns()
@@ -75,7 +75,7 @@ func FetchRows(rows *sql.Rows) ([]map[string]interface{}, error) {
 		if err != nil {
 			return result, err
 		}
-		record := make(map[string]interface{})
+		record := make(awesome_libs.Dict)
 		for i, col := range columns {
 			var v interface{}
 			val := values[i]
@@ -96,8 +96,8 @@ func FetchRows(rows *sql.Rows) ([]map[string]interface{}, error) {
 			allNil = allNil && record == nil
 		}
 		if allNil {
-			Logger.Debugf("result: %s", []map[string]interface{}{})
-			return []map[string]interface{}{}, nil
+			Logger.Debugf("result: %s", []awesome_libs.Dict{})
+			return []awesome_libs.Dict{}, nil
 		}
 	}
 
@@ -108,8 +108,8 @@ func FetchRows(rows *sql.Rows) ([]map[string]interface{}, error) {
 	return result, err
 }
 
-func FetchOneRow(rows *sql.Rows) (map[string]interface{}, error) {
-	result := make(map[string]interface{})
+func FetchOneRow(rows *sql.Rows) (awesome_libs.Dict, error) {
+	result := make(awesome_libs.Dict)
 	resultArray, err := FetchRows(rows)
 	if err != nil {
 		return result, err
@@ -120,20 +120,20 @@ func FetchOneRow(rows *sql.Rows) (map[string]interface{}, error) {
 	return result, error(nil)
 }
 
-func (c Connector) ListObjects(query string, args ...interface{}) ([]map[string]interface{}, error) {
+func (c Connector) ListObjects(query string, args ...interface{}) ([]awesome_libs.Dict, error) {
 	rows, err := c.Query(query, args...)
 	if err != nil {
-		return make([]map[string]interface{}, 0), err
+		return nil, err
 	}
 	objects, err := FetchRows(rows)
 	return objects, err
 }
 
-func (c Connector) ListAllPropertiesByTableName(tableName string) ([]map[string]interface{}, error) {
+func (c Connector) ListAllPropertiesByTableName(tableName string) ([]awesome_libs.Dict, error) {
 	query := fmt.Sprintf("SELECT * FROM %s", tableName)
 	objects, err := c.ListObjects(query)
 	if err != nil {
-		return []map[string]interface{}{}, err
+		return nil, err
 	}
 	return objects, err
 }
@@ -147,12 +147,12 @@ func (c Connector) DeleteObjectById(tableName string, id int64) error {
 	return error(nil)
 }
 
-func (c Connector) ShowObjectById(tableName string, id int64) (map[string]interface{}, error) {
+func (c Connector) ShowObjectById(tableName string, id int64) (awesome_libs.Dict, error) {
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=?", tableName)
 	rows, err := c.Query(query, id)
 	if err != nil {
 		awesome_error.CheckErr(err)
-		return make(map[string]interface{}), err
+		return nil, err
 	}
 	object, err := FetchOneRow(rows)
 	return object, err

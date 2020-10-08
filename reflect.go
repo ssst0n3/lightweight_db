@@ -3,6 +3,7 @@ package lightweight_db
 import (
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/ssst0n3/awesome_libs"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/awesome_libs/awesome_reflect"
 	"reflect"
@@ -82,7 +83,7 @@ func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
 /*
 !!!reflect attention, may cause panic!!!
 */
-func BindModelFromMap(modelPtr interface{}, object map[string]interface{}) error {
+func BindModelFromMap(modelPtr interface{}, object awesome_libs.Dict) error {
 	val := awesome_reflect.ValueByPtr(modelPtr)
 
 	for name, value := range object {
@@ -100,7 +101,7 @@ func BindModelFromMap(modelPtr interface{}, object map[string]interface{}) error
 /*
 !!!reflect attention, may cause panic!!!
 */
-func RetModelFromMap(model interface{}, object map[string]interface{}) (interface{}, error) {
+func RetModelFromMap(model interface{}, object awesome_libs.Dict) (interface{}, error) {
 	awesome_reflect.MustNotPointer(model)
 	val := reflect.New(reflect.TypeOf(model)).Elem()
 	for name, value := range object {
@@ -120,7 +121,7 @@ func RetModelFromMap(model interface{}, object map[string]interface{}) (interfac
 /*
 !!!reflect attention, may cause panic!!!
 */
-func BindModelFromMapList(modelPtr interface{}, objects []map[string]interface{}) error {
+func BindModelFromMapList(modelPtr interface{}, objects []awesome_libs.Dict) error {
 	val := awesome_reflect.ValueByPtr(modelPtr)
 	for _, object := range objects {
 		element := reflect.New(val.Type().Elem()).Elem()
