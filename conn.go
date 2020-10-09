@@ -35,19 +35,21 @@ func GetNewConnector(driverName string, dsn string) Connector {
 	return conn
 }
 
-func GetDsnFromEnvNormal() string {
-	dbProtocol := "tcp"
-	dbName := os.Getenv(EnvDbName)
-	dbHost := os.Getenv(EnvDbHost)
-	dbPort := os.Getenv(EnvDbPort)
-	dbUser := os.Getenv(EnvDbUser)
-	dbPasswordFile := os.Getenv(EnvDbPasswordFile)
-	password, err := ioutil.ReadFile(dbPasswordFile)
-	if err != nil {
-		panic(err)
-	}
-	password = bytes.TrimSpace(password)
+func GetDsnFromEnvNormal() (dsn string) {
+	if dsn = os.Getenv(EnvDbDsn); len(dsn) == 0 {
+		dbProtocol := "tcp"
+		dbName := os.Getenv(EnvDbName)
+		dbHost := os.Getenv(EnvDbHost)
+		dbPort := os.Getenv(EnvDbPort)
+		dbUser := os.Getenv(EnvDbUser)
+		dbPasswordFile := os.Getenv(EnvDbPasswordFile)
+		password, err := ioutil.ReadFile(dbPasswordFile)
+		if err != nil {
+			panic(err)
+		}
+		password = bytes.TrimSpace(password)
 
-	dsn := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?collation=utf8mb4_general_ci&maxAllowedPacket=0", dbUser, password, dbProtocol, dbHost, dbPort, dbName)
-	return dsn
+		dsn = fmt.Sprintf("%s:%s@%s(%s:%s)/%s?collation=utf8mb4_general_ci&maxAllowedPacket=0", dbUser, password, dbProtocol, dbHost, dbPort, dbName)
+	}
+	return
 }
