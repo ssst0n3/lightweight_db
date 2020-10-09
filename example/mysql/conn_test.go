@@ -8,6 +8,7 @@ import (
 )
 
 func TestGetDsnFromEnvNormal(t *testing.T) {
+	assert.NoError(t, os.Unsetenv(lightweight_db.EnvDbDsn))
 	assert.NoError(t, os.Setenv(lightweight_db.EnvDbName, "db"))
 	assert.NoError(t, os.Setenv(lightweight_db.EnvDbHost, "host"))
 	assert.NoError(t, os.Setenv(lightweight_db.EnvDbPort, "3306"))

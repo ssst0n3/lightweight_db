@@ -30,6 +30,8 @@ github.com/sirupsen/logrus v1.6.0 h1:UBcNElsrwanuuMsnGSlYmtmgbb23qDR5dG+6X6Oo89I
 github.com/sirupsen/logrus v1.6.0/go.mod h1:7uNnSEd1DgxDLC74fIahvMZmmYsHGZGEOFrfsX/uA88=
 github.com/ssst0n3/awesome_libs v0.4.2 h1:kHS2poiOoT8lxNSuHKKev61s7qMRb83Rxaqnb2GLuTA=
 github.com/ssst0n3/awesome_libs v0.4.2/go.mod h1:2c7yWeIaTpUg7CDxI4wi1eMRUuisdUVSN3oPqeBPOkI=
+github.com/ssst0n3/awesome_libs v0.4.4 h1:ifhAExGeB7So09K8pilPIOhsdGsKK4fea0XAwf8W3e8=
+github.com/ssst0n3/awesome_libs v0.4.4/go.mod h1:2c7yWeIaTpUg7CDxI4wi1eMRUuisdUVSN3oPqeBPOkI=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
