@@ -1,10 +1,17 @@
 package lightweight_db
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ssst0n3/lightweight_db/test/test_data"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
+
+func TestConnector_OrmMapTableByIdRet(t *testing.T) {
+	result, err := Conn.OrmListTableUsingReflectRet(test_data.TableNameChallenge, test_data.Challenge{})
+	assert.NoError(t, err)
+	spew.Dump(result)
+}
 
 func TestConnector_OrmListTableUsingReflectRet(t *testing.T) {
 	_, err := Conn.OrmListTableUsingReflectRet(test_data.TableNameChallenge, test_data.ChallengeWithId{})

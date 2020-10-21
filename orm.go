@@ -87,6 +87,30 @@ func (c Connector) OrmQueryRowsBind(modelPtr interface{}, query string, args ...
 	}
 }
 
+func (c Connector) OrmMapObjectByIdRet(model interface{}, query string, args ...interface{}) (result map[int64]interface{}, err error) {
+	result = map[int64]interface{}{}
+	objects, err := c.ListObjects(query, args...)
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return
+	}
+	for _, object := range objects {
+		var record interface{}
+		record, err = RetModelFromMap(model, object)
+		if err != nil {
+			awesome_error.CheckErr(err)
+			return
+		}
+		result[object["id"].(int64)] = record
+	}
+	return
+}
+
+func (c Connector)OrmMapTableByIdRet(tableName string, model interface{}) (map[int64]interface{}, error) {
+	query := fmt.Sprintf("SELECT * FROM %s", tableName)
+	return c.OrmMapObjectByIdRet(model, query)
+}
+
 /*
 !!!reflect attention, may cause panic!!!
 */
