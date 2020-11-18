@@ -215,14 +215,19 @@ func (c Connector) UpdateObject(id int64, tableName string, model interface{}) e
 }
 
 func (c Connector) UpdateObjectSingleColumnById(id int64, tableName string, columnName string, value interface{}) error {
+	return c.UpdateObjectSingleColumnByGuid("id", id, tableName, columnName, value)
+}
+
+func (c Connector) UpdateObjectSingleColumnByGuid(guidColumnName string, guidValue interface{}, tableName string, columnName string, value interface{}) error {
 	query := awesome_libs.Format(
-		"UPDATE `{.table}` SET `{.column}`=? WHERE id=?",
+		"UPDATE `{.table}` SET `{.column}`=? WHERE {.guid}=?",
 		awesome_libs.Dict{
 			"table":  tableName,
 			"column": columnName,
+			"guid": guidColumnName,
 		},
 	)
-	args := []interface{}{value, id}
+	args := []interface{}{value, guidValue}
 	_, err := c.Exec(query, args...)
 	if err != nil {
 		awesome_error.CheckErr(err)
