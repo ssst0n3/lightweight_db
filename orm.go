@@ -31,6 +31,9 @@ func (c Connector) OrmQueryRowBind(modelPtr interface{}, query string, args ...i
 		awesome_error.CheckErr(err)
 		return err
 	}
+	if object == nil {
+		return nil
+	}
 	return BindModelFromMap(modelPtr, object)
 }
 
@@ -45,6 +48,9 @@ func (c Connector) OrmQueryRowRet(model interface{}, query string, args ...inter
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return nil, err
+	}
+	if object == nil {
+		return model, nil
 	}
 	return RetModelFromMap(model, object)
 }
@@ -106,7 +112,7 @@ func (c Connector) OrmMapObjectByIdRet(model interface{}, query string, args ...
 	return
 }
 
-func (c Connector)OrmMapTableByIdRet(tableName string, model interface{}) (map[int64]interface{}, error) {
+func (c Connector) OrmMapTableByIdRet(tableName string, model interface{}) (map[int64]interface{}, error) {
 	query := fmt.Sprintf("SELECT * FROM %s", tableName)
 	return c.OrmMapObjectByIdRet(model, query)
 }
