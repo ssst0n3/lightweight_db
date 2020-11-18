@@ -7,6 +7,17 @@ import (
 	"testing"
 )
 
+func TestConnector_QueryRow(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		var result int
+		assert.NoError(t, Conn.QueryRow("SELECT 1", &result))
+	})
+	t.Run("empty", func(t *testing.T) {
+		var result int
+		assert.NoError(t, Conn.QueryRow("SELECT COUNT(*) WHERE 1=0", &result))
+	})
+}
+
 func TestConnector_OrmMapTableByIdRet(t *testing.T) {
 	result, err := Conn.OrmListTableUsingReflectRet(test_data.TableNameChallenge, test_data.Challenge{})
 	assert.NoError(t, err)
