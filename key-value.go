@@ -32,25 +32,27 @@ func (c Connector) CreateTableConfig() (err error) {
 	return
 }
 
-func (c Connector) KVGetValueByKey(tableName, columnNameValue, columnNameKey, columnKey string) (result Config, err error) {
-	query := awesome_libs.Format("SELECT * FROM {.tbl} WHERE {.key}=? LIMIT 1", awesome_libs.Dict{
+func (c Connector) KVGetValueByKey(tableName, columnNameValue, columnNameKey, columnKey string) (value string, err error) {
+	var config Config
+	query := awesome_libs.Format("SELECT {.value} FROM {.tbl} WHERE {.key}=? LIMIT 1", awesome_libs.Dict{
 		"value": columnNameValue,
 		"tbl":   tableName,
 		"key":   columnNameKey,
 	})
-	err = c.OrmQueryRowBind(&result, query, columnKey)
+	err = c.OrmQueryRowBind(&config, query, columnKey)
+	value = config.Value
 	return
 }
 
 func (c Connector) ShouldInitialize() (shouldInitialize bool, err error) {
-	result, err := c.KVGetValueByKey(
+	value, err := c.KVGetValueByKey(
 		TableNameConfig, ColumnNameConfigValue, ColumnNameConfigKey, "is_initialized",
 	)
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return
 	}
-	if isInitialized, err := strconv.ParseBool(result.Value); err != nil {
+	if isInitialized, err := strconv.ParseBool(value); err != nil {
 		awesome_error.CheckDebug(err)
 		shouldInitialize = true
 		err = nil

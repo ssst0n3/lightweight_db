@@ -14,9 +14,9 @@ func TestConnector_KVGetValueByKey(t *testing.T) {
 	}
 	_, err := Conn.CreateObject(TableNameConfig, config)
 	assert.NoError(t, err)
-	configResult, err := Conn.KVGetValueByKey(TableNameConfig, ColumnNameConfigValue, ColumnNameConfigKey, config.Key)
+	value, err := Conn.KVGetValueByKey(TableNameConfig, ColumnNameConfigValue, ColumnNameConfigKey, config.Key)
 	assert.NoError(t, err)
-	assert.Equal(t, config, configResult)
+	assert.Equal(t, config.Value, value)
 }
 
 func TestConnector_ShouldInitialize(t *testing.T) {
