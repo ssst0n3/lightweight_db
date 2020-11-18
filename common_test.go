@@ -45,15 +45,20 @@ func init() {
 //}
 
 func TestFetchRows(t *testing.T) {
-	query := "SELECT 1"
-	rows, err := Conn.Query(query)
-	assert.NoError(t, err)
-	objects, err := FetchRows(rows)
-	spew.Dump(objects)
-	expect := []awesome_libs.Dict{
-		{"1": int64(1)},
-	}
-	assert.Equal(t, expect, objects)
+	t.Run("select_1", func(t *testing.T) {
+		query := "SELECT 1"
+		rows, err := Conn.Query(query)
+		assert.NoError(t, err)
+		objects, err := FetchRows(rows)
+		spew.Dump(objects)
+		expect := []awesome_libs.Dict{
+			{"1": int64(1)},
+		}
+		assert.Equal(t, expect, objects)
+	})
+	t.Run("empty", func(t *testing.T) {
+		FetchRows(nil)
+	})
 }
 
 func TestFetchOneRow(t *testing.T) {

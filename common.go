@@ -53,6 +53,9 @@ func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 }
 
 func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
+	if rows == nil {
+		return nil, nil
+	}
 	result := make([]awesome_libs.Dict, 0)
 
 	// Get column names
@@ -151,7 +154,7 @@ func (c Connector) ListAllPropertiesByTableName(tableName string) ([]awesome_lib
 	return objects, err
 }
 
-func (c Connector)MapAllPropertiesByTableName(tableName string) (map[int64]awesome_libs.Dict, error)  {
+func (c Connector) MapAllPropertiesByTableName(tableName string) (map[int64]awesome_libs.Dict, error) {
 	query := fmt.Sprintf("SELECT * FROM %s", tableName)
 	objects, err := c.MapObjectById(query)
 	if err != nil {

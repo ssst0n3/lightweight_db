@@ -31,9 +31,6 @@ func (c Connector) OrmQueryRowBind(modelPtr interface{}, query string, args ...i
 		awesome_error.CheckErr(err)
 		return err
 	}
-	if object == nil {
-		return nil
-	}
 	return BindModelFromMap(modelPtr, object)
 }
 
@@ -48,9 +45,6 @@ func (c Connector) OrmQueryRowRet(model interface{}, query string, args ...inter
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return nil, err
-	}
-	if object == nil {
-		return model, nil
 	}
 	return RetModelFromMap(model, object)
 }
