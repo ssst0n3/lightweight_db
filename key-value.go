@@ -23,7 +23,12 @@ func (c Connector) CreateTableConfig() (err error) {
 	key   text,
 	value text
 );`
-	_, err = c.Exec(query)
+	statement, err := c.DB.Prepare(query)
+	if err != nil {
+		awesome_error.CheckFatal(err)
+		return
+	}
+	_, err = statement.Exec()
 	awesome_error.CheckErr(err)
 	return
 }
