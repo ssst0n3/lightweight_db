@@ -165,12 +165,20 @@ func (c Connector) MapAllPropertiesByTableName(tableName string) (map[int64]awes
 }
 
 func (c Connector) DeleteObjectById(tableName string, id int64) error {
-	query := fmt.Sprintf("DELETE FROM %s WHERE `id`=?", tableName)
-	_, err := c.Exec(query, id)
+	return c.DeleteObjectByGuid(tableName, "id", id)
+}
+
+func (c Connector) DeleteObjectByGuid(tableName string, key string, arg interface{}) (err error) {
+	query := awesome_libs.Format("DELETE FROM {.tbl} WHERE {.key}=?", awesome_libs.Dict{
+		"tbl": tableName,
+		"key": key,
+	})
+	_, err = c.Exec(query, arg)
 	if err != nil {
+		awesome_error.CheckErr(err)
 		return err
 	}
-	return error(nil)
+	return
 }
 
 func (c Connector) ShowObjectById(tableName string, id int64) (awesome_libs.Dict, error) {
