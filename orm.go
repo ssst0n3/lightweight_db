@@ -26,6 +26,9 @@ func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interfa
 func (c Connector) OrmQueryRowBind(modelPtr interface{}, query string, args ...interface{}) error {
 	awesome_reflect.MustPointer(modelPtr)
 	rows, err := c.Query(query, args...)
+	if rows == nil {
+		return nil
+	}
 	object, err := FetchOneRow(rows)
 	if err != nil {
 		awesome_error.CheckErr(err)
@@ -41,6 +44,9 @@ func (c Connector) OrmQueryRowBind(modelPtr interface{}, query string, args ...i
 func (c Connector) OrmQueryRowRet(model interface{}, query string, args ...interface{}) (interface{}, error) {
 	awesome_reflect.MustNotPointer(model)
 	rows, err := c.Query(query, args...)
+	if rows == nil {
+		return nil, nil
+	}
 	object, err := FetchOneRow(rows)
 	if err != nil {
 		awesome_error.CheckErr(err)

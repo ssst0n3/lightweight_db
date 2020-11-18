@@ -92,8 +92,9 @@ func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
 		}
 		result = append(result, record)
 	}
-
-	if len(result) == 1 {
+	if len(result) == 0 {
+		return result, nil
+	} else if len(result) == 1 {
 		allNil := true
 		for _, record := range result[0] {
 			allNil = allNil && record == nil
