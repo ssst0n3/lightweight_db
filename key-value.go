@@ -19,8 +19,7 @@ const (
 
 func (c Connector) CreateTableConfig() (err error) {
 	query := `CREATE TABLE IF NOT EXISTS config(
-	id           integer primary key autoincrement,
-	key   text,
+	key   text primary key,
 	value text
 );`
 	statement, err := c.DB.Prepare(query)

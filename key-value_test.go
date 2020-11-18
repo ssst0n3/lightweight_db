@@ -6,6 +6,7 @@ import (
 )
 
 func TestConnector_KVGetValueByKey(t *testing.T) {
+	Conn.DeleteAllObjects(TableNameConfig)
 	assert.NoError(t, Conn.CreateTableConfig())
 	config := Config{
 		Key:   "test",
