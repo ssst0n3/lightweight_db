@@ -20,7 +20,7 @@ func (c Connector) IsResourceExistsById(tableName string, id int64) (bool, error
 
 func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidValue interface{}) (bool, error) {
 	var result int
-	query := fmt.Sprintf("SELECT COUNT(id) FROM %s WHERE %s=?", tableName, guidColName)
+	query := fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE %s=?", tableName, guidColName)
 	if err := c.QueryRow(query, &result, guidValue); err != nil {
 		awesome_error.CheckErr(err)
 		return false, err
