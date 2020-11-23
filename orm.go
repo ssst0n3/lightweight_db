@@ -129,6 +129,9 @@ func (c Connector) OrmListTableUsingReflectRet(tableName string, model interface
 model must be a pointer
 var model []model.TableWithId
 c.OrmListTableUsingJson(tableName, &model)
+
+use OrmListTableUsingReflectRet to prevent error like this
+json: cannot unmarshal number into Go struct field Job.run of type bool
 */
 func (c Connector) OrmListTableUsingJsonBind(tableName string, modelPtr interface{}) error {
 	awesome_reflect.MustPointer(modelPtr)
