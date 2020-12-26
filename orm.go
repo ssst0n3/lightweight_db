@@ -186,7 +186,7 @@ func (c Connector) OrmShowObjectOnePropertyByIdUsingJsonBind(tableName string, c
 	return Value2StructByJson(property, modelPtr)
 }
 
-func (c Connector) OrmShowObjectOnePropertyBydIdByReflectBind(tableName string, columnName string, id int64, modelPtr interface{}) error {
+func (c Connector) OrmShowObjectOnePropertyByIdByReflectBind(tableName string, columnName string, id int64, modelPtr interface{}) error {
 	awesome_reflect.MustPointer(modelPtr)
 	query := awesome_libs.Format(
 		"SELECT `{.column}` FROM `{.table}` WHERE id=?",
