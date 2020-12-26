@@ -49,7 +49,7 @@ func GetDsnFromEnvNormal() (dsn string) {
 		}
 		password = bytes.TrimSpace(password)
 
-		dsn = fmt.Sprintf("%s:%s@%s(%s:%s)/%s?collation=utf8mb4_general_ci&maxAllowedPacket=0", dbUser, password, dbProtocol, dbHost, dbPort, dbName)
+		dsn = fmt.Sprintf("%s:%s@%s(%s:%s)/%s?collation=utf8mb4_general_ci&maxAllowedPacket=0&parseTime=true", dbUser, password, dbProtocol, dbHost, dbPort, dbName)
 	}
 	return
 }
