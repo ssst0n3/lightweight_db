@@ -1,6 +1,7 @@
 package lightweight_db
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/ssst0n3/awesome_libs"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
@@ -12,7 +13,7 @@ func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interfa
 	awesome_reflect.MustPointer(resultPtr)
 	Logger.Debugf("query: %s", query)
 	Logger.Debugf("args: %v", args)
-	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil {
+	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil && err != sql.ErrNoRows{
 		awesome_error.CheckErr(err)
 		return err
 	}
