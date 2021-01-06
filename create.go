@@ -15,7 +15,6 @@ func (c Connector) CreateObject(tableName string, model interface{}) (int64, err
 	query := fmt.Sprintf("INSERT INTO %s (`%s`) VALUES (%s)", tableName, strings.Join(cols, "`,`"), strings.Repeat("?,", len(cols))[:2*len(cols)-1])
 	res, err := c.Exec(query, args...)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return -1, err
 	}
 

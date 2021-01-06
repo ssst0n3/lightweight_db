@@ -49,7 +49,12 @@ func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 		awesome_error.CheckErr(err)
 		return nil, err
 	}
-	return stmt.Query(args...)
+	result, err := stmt.Query(args...)
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return nil, err
+	}
+	return result, nil
 }
 
 func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
@@ -61,6 +66,7 @@ func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
 	// Get column names
 	columns, err := rows.Columns()
 	if err != nil {
+		awesome_error.CheckErr(err)
 		return result, err
 	}
 
@@ -76,6 +82,7 @@ func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
 		// get RawBytes from data
 		err = rows.Scan(scanArgs...)
 		if err != nil {
+			awesome_error.CheckErr(err)
 			return result, err
 		}
 		record := make(awesome_libs.Dict)
@@ -106,6 +113,7 @@ func FetchRows(rows *sql.Rows) ([]awesome_libs.Dict, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		awesome_error.CheckErr(err)
 		return result, err
 	}
 	Logger.Debugf("result: %+v", result)
@@ -121,7 +129,7 @@ func FetchOneRow(rows *sql.Rows) (awesome_libs.Dict, error) {
 	if len(resultArray) > 0 {
 		result = resultArray[0]
 	}
-	return result, error(nil)
+	return result, nil
 }
 
 func (c Connector) ListObjects(query string, args ...interface{}) ([]awesome_libs.Dict, error) {
@@ -130,7 +138,10 @@ func (c Connector) ListObjects(query string, args ...interface{}) ([]awesome_lib
 		return nil, err
 	}
 	objects, err := FetchRows(rows)
-	return objects, err
+	if err != nil {
+		return nil, err
+	}
+	return objects, nil
 }
 
 func (c Connector) MapObjectById(query string, args ...interface{}) (map[int64]awesome_libs.Dict, error) {
@@ -143,7 +154,7 @@ func (c Connector) MapObjectById(query string, args ...interface{}) (map[int64]a
 		id := object["id"].(int64)
 		result[id] = object
 	}
-	return result, err
+	return result, nil
 }
 
 func (c Connector) ListAllPropertiesByTableName(tableName string) ([]awesome_libs.Dict, error) {
@@ -152,7 +163,7 @@ func (c Connector) ListAllPropertiesByTableName(tableName string) ([]awesome_lib
 	if err != nil {
 		return nil, err
 	}
-	return objects, err
+	return objects, nil
 }
 
 func (c Connector) MapAllPropertiesByTableName(tableName string) (map[int64]awesome_libs.Dict, error) {
@@ -161,7 +172,7 @@ func (c Connector) MapAllPropertiesByTableName(tableName string) (map[int64]awes
 	if err != nil {
 		return nil, err
 	}
-	return objects, err
+	return objects, nil
 }
 
 func (c Connector) DeleteObjectById(tableName string, id int64) error {
@@ -175,7 +186,6 @@ func (c Connector) DeleteObjectByGuid(tableName string, key string, arg interfac
 	})
 	_, err = c.Exec(query, arg)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return
@@ -185,16 +195,21 @@ func (c Connector) ShowObjectById(tableName string, id int64) (awesome_libs.Dict
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=?", tableName)
 	rows, err := c.Query(query, id)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return nil, err
 	}
 	object, err := FetchOneRow(rows)
+	if err != nil {
+		return nil, err
+	}
 	return object, err
 }
 
 func (c Connector) ShowObjectOnePropertyById(tableName string, columnName string, id int64) (interface{}, error) {
 	object, err := c.ShowObjectById(tableName, id)
-	return object[columnName], err
+	if err != nil {
+		return nil, err
+	}
+	return object[columnName], nil
 }
 
 /*
@@ -208,7 +223,6 @@ func (c Connector) UpdateObject(id int64, tableName string, model interface{}) e
 	query := fmt.Sprintf("UPDATE %s SET `%s`=? WHERE `id`=?", tableName, strings.Join(cols, "`=?, `"))
 	_, err := c.Exec(query, args...)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return nil
@@ -224,13 +238,12 @@ func (c Connector) UpdateObjectSingleColumnByGuid(guidColumnName string, guidVal
 		awesome_libs.Dict{
 			"table":  tableName,
 			"column": columnName,
-			"guid": guidColumnName,
+			"guid":   guidColumnName,
 		},
 	)
 	args := []interface{}{value, guidValue}
 	_, err := c.Exec(query, args...)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return nil
@@ -239,7 +252,6 @@ func (c Connector) UpdateObjectSingleColumnByGuid(guidColumnName string, guidVal
 func (c Connector) CountTable(tableName string) (count uint, err error) {
 	query := fmt.Sprintf("SELECT COUNT(*) FROM %s", tableName)
 	if err = c.QueryRow(query, &count); err != nil {
-		awesome_error.CheckErr(err)
 		return
 	}
 	return

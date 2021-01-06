@@ -13,7 +13,7 @@ func (c Connector) QueryRow(query string, resultPtr interface{}, args ...interfa
 	awesome_reflect.MustPointer(resultPtr)
 	Logger.Debugf("query: %s", query)
 	Logger.Debugf("args: %v", args)
-	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil && err != sql.ErrNoRows{
+	if err := c.DB.QueryRow(query, args...).Scan(resultPtr); err != nil && err != sql.ErrNoRows {
 		awesome_error.CheckErr(err)
 		return err
 	}
@@ -32,7 +32,6 @@ func (c Connector) OrmQueryRowBind(modelPtr interface{}, query string, args ...i
 	}
 	object, err := FetchOneRow(rows)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return BindModelFromMap(modelPtr, object)
@@ -50,7 +49,6 @@ func (c Connector) OrmQueryRowRet(model interface{}, query string, args ...inter
 	}
 	object, err := FetchOneRow(rows)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return nil, err
 	}
 	return RetModelFromMap(model, object)
@@ -62,13 +60,11 @@ func (c Connector) OrmQueryRowRet(model interface{}, query string, args ...inter
 func (c Connector) OrmQueryRowsRet(model interface{}, query string, args ...interface{}) (result []interface{}, err error) {
 	objects, err := c.ListObjects(query, args...)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return result, err
 	}
 	for _, object := range objects {
 		record, err := RetModelFromMap(model, object)
 		if err != nil {
-			awesome_error.CheckErr(err)
 			return result, err
 		}
 		result = append(result, record)
@@ -82,11 +78,9 @@ func (c Connector) OrmQueryRowsRet(model interface{}, query string, args ...inte
 func (c Connector) OrmQueryRowsBind(modelPtr interface{}, query string, args ...interface{}) error {
 	awesome_reflect.MustPointer(modelPtr)
 	if rows, err := c.Query(query, args...); err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	} else {
 		if object, err := FetchRows(rows); err != nil {
-			awesome_error.CheckErr(err)
 			return err
 		} else {
 			return BindModelFromMapList(modelPtr, object)
@@ -98,14 +92,12 @@ func (c Connector) OrmMapObjectByIdRet(model interface{}, query string, args ...
 	result = map[int64]interface{}{}
 	objects, err := c.ListObjects(query, args...)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return
 	}
 	for _, object := range objects {
 		var record interface{}
 		record, err = RetModelFromMap(model, object)
 		if err != nil {
-			awesome_error.CheckErr(err)
 			return
 		}
 		result[object["id"].(int64)] = record
@@ -138,7 +130,6 @@ func (c Connector) OrmListTableUsingJsonBind(tableName string, modelPtr interfac
 	awesome_reflect.MustPointer(modelPtr)
 	objects, err := c.ListAllPropertiesByTableName(tableName)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return Value2StructByJson(objects, modelPtr)
@@ -166,7 +157,6 @@ func (c Connector) OrmShowObjectByIdUsingJsonBind(tableName string, id int64, mo
 	awesome_reflect.MustPointer(modelPtr)
 	object, err := c.ShowObjectById(tableName, id)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return Value2StructByJson(object, modelPtr)
@@ -181,7 +171,6 @@ func (c Connector) OrmShowObjectOnePropertyByIdUsingJsonBind(tableName string, c
 	awesome_reflect.MustPointer(modelPtr)
 	property, err := c.ShowObjectOnePropertyById(tableName, columnName, id)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return err
 	}
 	return Value2StructByJson(property, modelPtr)

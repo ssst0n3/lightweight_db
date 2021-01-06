@@ -49,7 +49,6 @@ func (c Connector) ShouldInitialize() (shouldInitialize bool, err error) {
 		TableNameConfig, ColumnNameConfigValue, ColumnNameConfigKey, "is_initialized",
 	)
 	if err != nil {
-		awesome_error.CheckErr(err)
 		return
 	}
 	if isInitialized, err := strconv.ParseBool(value); err != nil {

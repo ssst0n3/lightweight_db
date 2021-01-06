@@ -22,7 +22,6 @@ func (c Connector) IsResourceExistsByGuid(tableName string, guidColName, guidVal
 	var result int
 	query := fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE %s=?", tableName, guidColName)
 	if err := c.QueryRow(query, &result, guidValue); err != nil {
-		awesome_error.CheckErr(err)
 		return false, err
 	}
 

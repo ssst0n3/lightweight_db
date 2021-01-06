@@ -12,5 +12,9 @@ func Value2StructByJson(value interface{}, model interface{}) error {
 		return err
 	}
 	err = json.Unmarshal(j, model)
-	return err
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	return nil
 }

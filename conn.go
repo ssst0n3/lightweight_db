@@ -21,9 +21,14 @@ func (c *Connector) Connect() (err error) {
 	c.DB, err = sql.Open(c.DriverName, c.Dsn)
 	if err != nil {
 		awesome_error.CheckErr(err)
-		return err
+		return
 	}
-	return c.DB.Ping()
+	err = c.DB.Ping()
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return
+	}
+	return
 }
 
 func GetNewConnector(driverName string, dsn string) Connector {
