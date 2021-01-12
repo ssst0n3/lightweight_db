@@ -133,6 +133,7 @@ func BindModelFromMapList(modelPtr interface{}, objects []awesome_libs.Dict) err
 				err := errors.New(fmt.Sprintf("field : %s did not find", name))
 				awesome_error.CheckWarning(err)
 				//return err
+				continue
 			}
 			value = ConvertDbValue2Field(value, field)
 			field.Set(awesome_reflect.Value(value).Convert(field.Type()))
