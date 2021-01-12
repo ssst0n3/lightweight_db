@@ -131,8 +131,8 @@ func BindModelFromMapList(modelPtr interface{}, objects []awesome_libs.Dict) err
 			field, find := awesome_reflect.FieldByJsonTag(element, name)
 			if !find {
 				err := errors.New(fmt.Sprintf("field : %s did not find", name))
-				awesome_error.CheckErr(err)
-				return err
+				awesome_error.CheckWarning(err)
+				//return err
 			}
 			value = ConvertDbValue2Field(value, field)
 			field.Set(awesome_reflect.Value(value).Convert(field.Type()))
