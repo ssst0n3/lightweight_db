@@ -131,7 +131,7 @@ func BindModelFromMapList(modelPtr interface{}, objects []awesome_libs.Dict) err
 			field, find := awesome_reflect.FieldByJsonTag(element, name)
 			if !find {
 				err := errors.New(fmt.Sprintf("field : %s did not find", name))
-				awesome_error.CheckWarning(err)
+				awesome_error.CheckDebug(err)
 				//return err
 				continue
 			}
