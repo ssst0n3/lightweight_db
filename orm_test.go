@@ -70,3 +70,11 @@ func TestConnector_OrmQueryRowBind(t *testing.T) {
 
 	//Conn.OrmQueryRowsBind(&categoriesRecursiveList, query)
 }
+
+func TestConnector_OrmListTableByColumnBind(t *testing.T) {
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+	var challenges []test_data.ChallengeWithId
+	err := Conn.OrmListTableByColumnBind(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, "name", &challenges)
+	assert.NoError(t, err)
+	assert.Equal(t, int64(test_data.Challenges[0].Id), challenges[0].Id)
+}

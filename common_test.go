@@ -131,3 +131,10 @@ func TestConnector_CountTable(t *testing.T) {
 		assert.Error(t, err)
 	})
 }
+
+func TestConnector_ListTableByColumn(t *testing.T) {
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+	challenges, err := Conn.ListTableByColumn(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, "name")
+	assert.NoError(t, err)
+	assert.Equal(t, int64(test_data.Challenges[0].Id), challenges[0]["id"])
+}

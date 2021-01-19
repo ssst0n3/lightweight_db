@@ -166,6 +166,15 @@ func (c Connector) ListAllPropertiesByTableName(tableName string) ([]awesome_lib
 	return objects, nil
 }
 
+func (c Connector)ListTableByColumn(tableName, columnName string, column interface{}) (result []awesome_libs.Dict, err error)  {
+	query := fmt.Sprintf("SELECT * FROM %s WHERE %s=?", tableName, columnName)
+	objects, err := c.ListObjects(query, column)
+	if err != nil {
+		return nil, err
+	}
+	return objects, nil
+}
+
 func (c Connector) MapAllPropertiesByTableName(tableName string) (map[int64]awesome_libs.Dict, error) {
 	query := fmt.Sprintf("SELECT * FROM %s", tableName)
 	objects, err := c.MapObjectById(query)

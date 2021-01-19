@@ -135,6 +135,15 @@ func (c Connector) OrmListTableUsingJsonBind(tableName string, modelPtr interfac
 	return Value2StructByJson(objects, modelPtr)
 }
 
+func (c Connector) OrmListTableByColumnBind(tableName, columnName string, column interface{}, modelPtr interface{}) (err error) {
+	awesome_reflect.MustPointer(modelPtr)
+	objects, err := c.ListTableByColumn(tableName, columnName, column)
+	if err != nil {
+		return err
+	}
+	return Value2StructByJson(objects, modelPtr)
+}
+
 /*
 !!!reflect attention, may cause panic!!!
 */
