@@ -1,6 +1,8 @@
 package test_data
 
-import "github.com/ssst0n3/awesome_libs"
+import (
+	"github.com/ssst0n3/awesome_libs"
+)
 
 /*
 CREATE TABLE IF NOT EXISTS challenge
@@ -16,9 +18,9 @@ type ResourceWrapper struct {
 }
 
 type Challenge struct {
-	Name   string `json:"name"`
-	Score  int    `json:"score"`
-	Solved bool   `json:"solved"`
+	Name   string                            `json:"name"`
+	Score  int                               `json:"score"`
+	Solved awesome_libs.NumberCompatibleBool `json:"solved"`
 }
 
 type ChallengeWithId struct {
@@ -66,7 +68,7 @@ var Challenge1Update = ChallengeWithId{
 	},
 }
 
-func Bool2Int64(b bool) int64 {
+func Bool2Int64(b awesome_libs.NumberCompatibleBool) int64 {
 	if b {
 		return int64(1)
 	} else {

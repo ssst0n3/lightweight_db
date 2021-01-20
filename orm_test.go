@@ -36,6 +36,13 @@ func TestConnector_OrmShowObjectByIdUsingReflectBind(t *testing.T) {
 	assert.Equal(t, test_data.Challenge1, challengeWithId)
 }
 
+func TestConnector_OrmShowObjectByIdUsingJsonBind(t *testing.T) {
+	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
+	var challengeWithId test_data.ChallengeWithId
+	assert.NoError(t, Conn.OrmShowObjectByIdUsingJsonBind(test_data.TableNameChallenge, 1, &challengeWithId))
+	assert.Equal(t, test_data.Challenge1, challengeWithId)
+}
+
 func TestConnector_OrmShowObjectOnePropertyByIdUsingJsonBind(t *testing.T) {
 	Conn.InitTable(test_data.TableNameChallenge, test_data.Challenges, Conn.ResetAutoIncrementSqlite, nil)
 	var name string

@@ -58,12 +58,12 @@ func RetColsValues(model interface{}) (colsRet []string, valuesRet []interface{}
 // TODO: add test cases
 func ConvertDbValue2Field(value interface{}, field reflect.Value) interface{} {
 	switch field.Type().String() {
-	case "bool":
+	case "bool","awesome_libs.NumberCompatibleBool":
 		switch value.(type) {
 		case int64:
 			value = value == int64(1)
 		case int:
-			value = value == int(1)
+			value = value == 1
 		}
 	case "time.Time":
 		switch value.(type) {
