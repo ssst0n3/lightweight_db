@@ -83,5 +83,5 @@ func TestConnector_OrmListTableByColumnBind(t *testing.T) {
 	var challenges []test_data.ChallengeWithId
 	err := Conn.OrmListTableByColumnBind(test_data.TableNameChallenge, test_data.ColumnNameChallengeName, "name", &challenges)
 	assert.NoError(t, err)
-	assert.Equal(t, int64(test_data.Challenges[0].Id), challenges[0].Id)
+	assert.Equal(t, test_data.Challenges[0].Id, challenges[0].Id)
 }
