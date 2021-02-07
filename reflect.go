@@ -107,6 +107,9 @@ func RetModelFromMap(model interface{}, object awesome_libs.Dict) (interface{}, 
 	awesome_reflect.MustNotPointer(model)
 	val := reflect.New(reflect.TypeOf(model)).Elem()
 	for name, value := range object {
+		if value == nil {
+			continue
+		}
 		field, find := awesome_reflect.FieldByJsonTag(val, name)
 		if !find {
 			err := errors.New( fmt.Sprintf("filed: %s did not find", name))
