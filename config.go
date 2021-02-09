@@ -1,3 +1,3 @@
 package lightweight_db
 
-const TimeFormat = "2006-01-02 15:04:05"
+var TimeFormat = "2006-01-02 15:04:05"
