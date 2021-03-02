@@ -49,6 +49,7 @@ func (c Connector) Query(query string, args ...interface{}) (*sql.Rows, error) {
 		awesome_error.CheckErr(err)
 		return nil, err
 	}
+	defer stmt.Close()
 	result, err := stmt.Query(args...)
 	if err != nil {
 		awesome_error.CheckErr(err)
